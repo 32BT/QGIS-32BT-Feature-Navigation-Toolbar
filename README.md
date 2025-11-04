@@ -26,16 +26,38 @@ If only one feature is selected, the start-button will not be available. This is
 
 <img width="426" height="177" alt="image" src="https://github.com/user-attachments/assets/2e4f7a23-f1a9-437a-9b5a-69b32ce9a4bd" /><br/><br/>
 
+### Feature Navigation Toolbar API  
 **Plugin API**  
-The plugin will be available to other plugins through the iface var. If you have a plugin class with iface stored in self._iface, its enginecontroller can be found as follows:  
+The plugin will be available to other plugins through the iface var. If you have a plugin class with iface stored in self._iface, the navigation controller can be found as follows:
+
 ```python
 navCtl = self._iface.property("com.32bt.NavigationController")
 ```  
 
-The navigationcontroller has a method named "selectNextFeature" which can be called after processing a feature. This will trigger the navigationengine to zoom to and select the next feature from the original selection. It also stores the current feature in the parsed set of features. Since the navigationengine may not necessarily be available, your code should look something like this:
+The navigation controller has a method named "selectNextFeature" which can be called after processing a feature. This will trigger the navigation controller to zoom to and select the next feature from the original selection and update the toolbar accordingly. It also stores the current selection in the parsed set of features. Since the plugin may not necessarily be available, your code should look something like this:
+
 ```python
 def selectNextFeature(self, layer):
     navCtl = self._iface.property("com.32bt.NavigationController")
     if navCtl: navCtl.selectNextFeature(layer)
 ```
 
+Navigation only works if your layer matches the navigation layer. The current navigation layer can be fetched using the method "activeLayer":
+
+```python
+    if navCtl.activeLayer() == layer:
+        # layer selection will be updated if you call selectNextFeature
+    else:
+        # layer selection will be cleared if you call selectNextFeature
+```
+
+Removing the selection if the layer does not match, is a "convenience" function for feedbackpurposes. If you prefer to isolate the layer responsibility, you can accomplish the same result with the following complete example:
+
+```python
+def selectNextFeature(self, layer):
+    navCtl = self._iface.property("com.32bt.NavigationController")
+    if navCtl and navCtl.activeLayer()==layer:
+        navCtl.selectNextFeature(layer)
+    else:
+        layer.removeSelection()
+```
