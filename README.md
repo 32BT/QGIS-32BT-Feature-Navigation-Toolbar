@@ -13,6 +13,8 @@ Because the browser distinguishes between parsed and unparsed features it can ch
 You can download a zipfile of the code repository using the Code-button available on this repository's github page. Decompress the zipfile into your QGIS plugins directory. The plugin management dialog can do this for you using the "Install from ZIP" option. See: https://docs.qgis.org/3.40/nl/docs/user_manual/plugins/plugins.html#the-install-from-zip-tab  
 In the plugin management dialog, make sure the plugin is activated.
 
+<img width="1075" height="432" alt="image" src="https://github.com/user-attachments/assets/b738591a-76dc-4dab-ad55-6eae993ff828" /><br/>
+
 **Start Navigation**  
 The resetbutton at the left of the toolbar allows you to start a navigation session.  
 
@@ -22,4 +24,18 @@ The button will be available if the active layer in the map legend is a feature 
 
 If only one feature is selected, the start-button will not be available. This is generally the case during navigation and prevents accidentally hitting the restart-button. In addition, if another browsing session is currently active, then a reset will always ask you for confirmation. If you inadvertently selected the resetbutton, or you decide to stick with the current browsing session instead, you can simply select cancel. 
 
-<img width="426" height="177" alt="image" src="https://github.com/user-attachments/assets/2e4f7a23-f1a9-437a-9b5a-69b32ce9a4bd" />
+<img width="426" height="177" alt="image" src="https://github.com/user-attachments/assets/2e4f7a23-f1a9-437a-9b5a-69b32ce9a4bd" /><br/><br/>
+
+**Plugin API**  
+The plugin will be available to other plugins through the iface var. If you have a plugin class with iface stored in self._iface, its enginecontroller can be found as follows:  
+```python
+navCtl = self._iface.property("com.32bt.NavigationController")
+```  
+
+The navigationcontroller has a method named "selectNextFeature" which can be called after processing a feature. This will trigger the navigationengine to zoom to and select the next feature from the original selection. It also stores the current feature in the parsed set of features. Since the navigationengine may not necessarily be available, your code should look something like this:
+```python
+def selectNextFeature(self, layer):
+    navCtl = self._iface.property("com.32bt.NavigationController")
+    if navCtl: navCtl.selectNextFeature(layer)
+```
+
