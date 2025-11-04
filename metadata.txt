@@ -1,0 +1,10 @@
+[general]
+name=32BT Feature Navigation Toolbar
+description=Quickly navigate a set of features
+about=This plugin provides a toolbar for navigating a preselected set of features from a featurelayer. Create a selection of features and hit the start button. The plugin will store the selection and will zoom to and select the first feature. You can then use the navigation buttons to zoom to and select each individual feature. When active, other plugins can communicate with this plugin for conjoint operation. See homepage for details.
+version=1.0
+qgisMinimumVersion=3.0
+author=32BT
+homepage=https://github.com/32BT/QGIS-Feature-Navigation-Toolbar
+repository=https://github.com/32BT/QGIS-Feature-Navigation-Toolbar
+tracker=https://github.com/32BT/QGIS-Feature-Navigation-Toolbar/issues
