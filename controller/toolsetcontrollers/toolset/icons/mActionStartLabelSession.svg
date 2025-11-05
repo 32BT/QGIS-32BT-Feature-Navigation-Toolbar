@@ -1,0 +1,7 @@
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+  <g id="start-icon">
+    <rect x="5" y="5" width="65" height="80" rx="6" fill="#ddd" stroke="#666" stroke-width="6" />
+	<path d="M5 25 L70 25" stroke="#666" stroke-width="6"/>
+	<path d="M50 40 L95 68 L50 96Z" fill="#69b" stroke="#357" stroke-width="6" stroke-linejoin="round"/>
+  </g>
+</svg>
