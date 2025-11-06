@@ -51,7 +51,7 @@ Navigation only works if your layer matches the navigation layer. The current na
         # layer selection will be cleared if you call selectNextFeature
 ```
 
-Removing the selection if the layer does not match, is a "convenience" function for feedbackpurposes. If you prefer to isolate the layer responsibility, you can accomplish the same result with the following complete example:
+Removing the selection if the layer does not match, is a "convenience" function for feedbackpurposes. If you prefer to isolate the layer responsibility, you can accomplish the same result with the following example:
 
 ```python
 def selectNextFeature(self, layer):
