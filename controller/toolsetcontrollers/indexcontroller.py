@@ -35,9 +35,9 @@ class IndexController(ToolsController):
         self._tools.reset()
         if layer and layer.isValid():
             src = layer.selectedFeatureIds()
-            self._items = IndexItems(src)
-            self._tools.reset(len(self._items)-1)
-            if len(self._items):
+            if len(src) > 1:
+                self._items = IndexItems(src)
+                self._tools.reset(len(self._items)-1)
                 self.selectFeature(self._items[0])
 
     ########################################################################
@@ -53,7 +53,8 @@ class IndexController(ToolsController):
     '''
     If no features are selected, then a single step navigation attempt should
     first move to the current index, not to the next index.
-    HandleToolsAction will only be called if IndexTools did not update index.
+    If IndexTools does not update index due to the lock, then HandleToolsAction
+    will be called instead. This will select the current item.
     '''
     def selectedFeaturesChanged(self, layer):
         if self._layer==layer and layer:

@@ -3,6 +3,9 @@
 from qgis.PyQt.QtWidgets import *
 
 
+################################################################################
+### ResetDialog
+################################################################################
 '''
 The pattern for one of our dialogs would normally look like this:
 
@@ -23,6 +26,7 @@ Based on QDialog it would look somewhat like so:
 The ResetDialog however, is a simple confirmation dialog and can use one of
 the simple convenience dialogclasses. Even so, we maintain the same pattern.
 '''
+
 class ResetDialog:
     def __init__(self, parent):
         self._parent = parent

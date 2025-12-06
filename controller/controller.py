@@ -6,11 +6,17 @@ from .toolsetcontrollers import IndexController
 from .dialog import ResetDialog
 
 '''
+NavigationController is the main controller.
+It merely manages two subcontrollers that do the actual work.
+
 NavigationController
-    ResetController
+    ResetController <-- responsible for reset button
         ResetTools
-    IndexController
+    IndexController <-- responsible for index buttons
         IndexTools
+
+NavigationController is derived from KeyController which makes the controller
+available to other plugins.
 '''
 
 ################################################################################
@@ -43,6 +49,8 @@ class KeyController(QObject):
     def find(self, key, alt=None):
         return self._iface.property("32bt."+key) or alt
 
+################################################################################
+### NavigationController
 ################################################################################
 '''
 The main controller manages the relation between a ResetController and an

@@ -12,7 +12,10 @@ not emit any signal.
 
 So, we need to implement an alternative...
 
-The signal selection.changed will emit when:
+The Selection class will watch for layer changed signals, and will also watch
+for selection changed signals on the active layer using the Layer class.
+
+The selection.changed signal will emit when:
 - the layerselection is changed, or
 - the featureselection is changed (regardless of visibility).
 The layer property may be None.
