@@ -25,6 +25,8 @@ Based on QDialog it would look somewhat like so:
 
 The ResetDialog however, is a simple confirmation dialog and can use one of
 the simple convenience dialogclasses. Even so, we maintain the same pattern.
+
+    ResetDialog(parent).confirmReset(...)
 '''
 
 class ResetDialog:

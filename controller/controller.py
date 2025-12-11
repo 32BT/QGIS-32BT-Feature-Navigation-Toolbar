@@ -36,9 +36,13 @@ the refcount either. That means:
     - we do need to clear the stored reference ourselves.
 '''
 class KeyController(QObject):
-    def __init__(self, iface, key=None):
+    @classmethod
+    def _get_key(cls, name=None):
+        return '.'.join(('32bt','fnt',name or cls.__name__))
+
+    def __init__(self, iface, name=None):
         super().__init__()
-        self._KEY = key or ("32bt."+self.__class__.__name__)
+        self._KEY = self._get_key(name)
         self._iface = iface
         self._iface.setProperty(self._KEY, self)
 
@@ -46,8 +50,8 @@ class KeyController(QObject):
         self._iface.setProperty(self._KEY, None)
         if hasattr(super(), '__del__'): super().__del__()
 
-    def find(self, key, alt=None):
-        return self._iface.property("32bt."+key) or alt
+    def find(self, class_name, alt=None):
+        return self._iface.property(self._get_key(class_name)) or alt
 
 ################################################################################
 ### NavigationController
@@ -56,7 +60,7 @@ class KeyController(QObject):
 The main controller manages the relation between a ResetController and an
 IndexController. It is also a KeyController and therefore reachable via a key:
 
-    navCtl = self._iface.property("32bt.NavigationController")
+    navCtl = self._iface.property("32bt.fnt.NavigationController")
 '''
 class NavigationController(KeyController):
     didSelectFeature = pyqtSignal(object)
