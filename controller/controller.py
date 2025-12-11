@@ -1,14 +1,22 @@
 
+################################################################################
+### Toolbar Name
+################################################################################
+
+from .language import _str
+TOOLBAR_NAME = _str("Feature Navigation Toolbar")
+
+################################################################################
+
 from qgis.PyQt.QtCore import *
 
 from .toolsetcontrollers import ResetController
 from .toolsetcontrollers import IndexController
 from .dialog import ResetDialog
 
-from .language import _str
-TOOLBAR_NAME = _str("Feature Navigation Toolbar")
-
-
+################################################################################
+### NavigationController
+################################################################################
 '''
 NavigationController is the main controller.
 It merely manages two subcontrollers that do the actual work.
@@ -19,19 +27,9 @@ NavigationController
     IndexController <-- responsible for index buttons
         IndexTools
 
-NavigationController is derived from KeyController which makes the controller
-available to other plugins.
-'''
+NavigationController is available to other plugins via:
 
-################################################################################
-### KeyController
-################################################################################
-'''
-A KeyController is a controller that is publicly reachable from the dynamic
-properties of iface using a key. By default, there can be only one instance
-of any subclass of KeyController. The construct is meant to be used for
-*key* controllers, hence the name. (If more than one instance is ever desired,
-then a custom key can be provided.)
+    navCtl = self._iface.property("32bt.fnt.NavigationController")
 
 Note that an unknown Python object offered to setProperty is likely stored as
 an integer. It is therefore not a true weak reference, but will not increase
@@ -39,57 +37,35 @@ the refcount either. That means:
     - it is not a circular reference, so __del__ will eventually be called
     - we do need to clear the stored reference ourselves.
 '''
-class KeyController(QObject):
-    @classmethod
-    def _get_key(cls, name=None):
-        return '.'.join(('32bt','fnt',name or cls.__name__))
-
-    def __init__(self, iface, name=None):
-        super().__init__()
-        self._KEY = self._get_key(name)
-        self._iface = iface
-        self._iface.setProperty(self._KEY, self)
-
-    def __del__(self):
-        self._iface.setProperty(self._KEY, None)
-        if hasattr(super(), '__del__'): super().__del__()
-
-    def find(self, class_name, alt=None):
-        return self._iface.property(self._get_key(class_name)) or alt
-
-################################################################################
-### NavigationController
-################################################################################
-'''
-The main controller manages the relation between a ResetController and an
-IndexController. It is also a KeyController and therefore reachable via a key:
-
-    navCtl = self._iface.property("32bt.fnt.NavigationController")
-'''
-class NavigationController(KeyController):
+class NavigationController(QObject):
     didSelectFeature = pyqtSignal(object)
 
     def __init__(self, iface, toolBar):
-        super().__init__(iface)
+        super().__init__()
+        self._iface = iface
         self._resetController = ResetController(iface, toolBar)
         self._indexController = IndexController(iface, toolBar)
 
         self._resetController.setDelegate(self)
         self._indexController.didSelectFeature.connect(self.didSelectFeature)
 
+        self._iface.setProperty(self.KEY, self)
+
+    def __del__(self):
+        self._iface.setProperty(self.KEY, None)
+
     ########################################################################
     ### API
     ########################################################################
-    '''
-    This will be called from outside the plugin context. This will:
-        - check if incoming layer corresponds to our current layer
-        - if so, update selection
-        - otherwise remove selection (caller responsibility?)
-    '''
+
+    @property
+    def KEY(self):
+        return "32bt.fnt."+self.__class__.__name__
+
     def activeLayer(self):
         return self._indexController.layer()
 
-    def selectNextFeature(self, layer):
+    def selectNextFeature(self, layer=None):
         if layer and layer.isValid():
             if self._indexController.layer() == layer:
                 return self._indexController.selectNextFeature()
