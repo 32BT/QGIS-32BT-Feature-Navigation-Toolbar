@@ -5,6 +5,10 @@ from .toolsetcontrollers import ResetController
 from .toolsetcontrollers import IndexController
 from .dialog import ResetDialog
 
+from .language import _str
+TOOLBAR_NAME = _str("Feature Navigation Toolbar")
+
+
 '''
 NavigationController is the main controller.
 It merely manages two subcontrollers that do the actual work.

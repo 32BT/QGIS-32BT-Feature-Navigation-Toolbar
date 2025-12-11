@@ -1,0 +1,20 @@
+# Toolbar name
+Feature Navigation Toolbar
+Werkbalk Objectnavigatie
+
+# Reset Dialog Title
+Reset Navigation
+Navigatie Wijzigen
+
+# Reset Dialog Text
+Navigation is currently set to layer '{}'.
+Navigatie staat momenteel ingesteld op laag '{}'.
+
+Do you want to reset to
+Wil je navigatie wijzigen naar
+
+the new selection?
+de nieuwe selectie?
+
+layer '{}'?
+laag '{}'?

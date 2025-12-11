@@ -2,6 +2,7 @@
 
 from qgis.PyQt.QtWidgets import *
 
+from ..language import _str
 
 ################################################################################
 ### ResetDialog
@@ -43,14 +44,14 @@ class ResetDialog:
         return result == QMessageBox.StandardButton.Ok
 
     def prepareConfirmResetTitle(self):
-        return "Reset Navigation"
+        return _str("Reset Navigation")
 
     def prepareConfirmResetLabel(self, old_layer, new_layer=None):
-        text = "Navigation is currently set to layer '{}'.\n".format(old_layer.name())
-        text += "Do you want to reset to "
+        text = _str("Navigation is currently set to layer '{}'.\n").format(old_layer.name())
+        text += _str("Do you want to reset to ")
         if old_layer == new_layer:
-            text += "the new selection?"
+            text += _str("the new selection?")
         else:
-            text += "layer '{}'?".format(new_layer.name())
+            text += _str("layer '{}'?").format(new_layer.name())
         return text
 
