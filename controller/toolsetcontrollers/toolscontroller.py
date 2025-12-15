@@ -44,6 +44,9 @@ class ToolsController(LayerController):
     def selectedFeaturesChanged(self, layer):
         pass
 
+    ########################################################################
+
+    # Override setLayer to also include tools update
     def setLayer(self, layer):
         super().setLayer(layer)
         self.updateActions()

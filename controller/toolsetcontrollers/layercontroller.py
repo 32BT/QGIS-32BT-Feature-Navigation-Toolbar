@@ -49,7 +49,8 @@ class LayerController(QObject):
     Layers are wrapperobjects and should not be referenced after removal.
     LayerController holds a layer. A layer is a wrapperobject and therefore
     it is only valid until it is removed. Note that even during the signal
-    "willBeDeleted", the pythonobject is already dead.
+    "willBeDeleted", the pythonobject is already unusable and will raise
+    a wrapper exception.
     '''
     def _connect(self):
         project = QgsProject.instance()
