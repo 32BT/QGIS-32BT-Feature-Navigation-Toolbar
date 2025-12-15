@@ -16,8 +16,8 @@ The Selection class will watch for layer changed signals, and will also watch
 for selection changed signals on the active layer using the Layer class.
 
 The selection.changed signal will emit when:
-- the layerselection is changed, or
-- the featureselection is changed (regardless of visibility).
+- the layerselection changes, or
+- the featureselection changes (on the active layer, regardless of visibility).
 The layer property may be None.
 '''
 
