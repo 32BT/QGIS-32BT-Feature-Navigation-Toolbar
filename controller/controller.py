@@ -4,7 +4,8 @@
 ################################################################################
 
 from .language import _str
-TOOLBAR_NAME = _str("Feature Navigation Toolbar")
+class TOOLBAR:
+    NAME = _str("Feature Navigation Toolbar")
 
 ################################################################################
 
