@@ -1,3 +1,3 @@
 
-from .controller import TOOLBAR_NAME
+from .controller import TOOLBAR
 from .controller import NavigationController

@@ -14,6 +14,7 @@ class IndexController(ToolsController):
     def __init__(self, iface, toolBar):
         super().__init__(iface, IndexTools(toolBar))
         self._tools.indexChanged.connect(self.selectItem)
+        self.updateActions()
 
     ########################################################################
     ### Layer

@@ -23,7 +23,6 @@ class ToolsController(LayerController):
         super().__init__(iface)
         self._tools = toolSet
         self._tools.actionTriggered.connect(self.toolsActionTriggered)
-        self.updateActions()
 
         self._selection = Selection(iface)
         self._selection.changed.connect(self.selectionChanged)

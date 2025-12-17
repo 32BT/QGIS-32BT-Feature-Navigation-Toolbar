@@ -4,7 +4,8 @@
 ################################################################################
 
 from .language import _str
-TOOLBAR_NAME = _str("Feature Navigation Toolbar")
+class TOOLBAR:
+    NAME = _str("Feature Navigation Toolbar")
 
 ################################################################################
 
@@ -60,7 +61,7 @@ class NavigationController(QObject):
 
     @property
     def KEY(self):
-        return "32bt.fnt."+self.__class__.__name__
+        return "32bt.fnt.NavigationController"
 
     def activeLayer(self):
         return self._indexController.layer()
