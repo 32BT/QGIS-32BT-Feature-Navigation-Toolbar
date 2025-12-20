@@ -11,10 +11,11 @@ from ..language import _str
 
 class ToolBar:
     _NAME = "Feature Navigation Toolbar"
+    _GUID = IDENTIFIERS.PREFIX+_NAME.replace(" ", "")
 
     def __new__(cls, iface):
         toolBar = iface.addToolBar(_str(cls._NAME))
-        toolBar.setObjectName(cls._NAME)
+        toolBar.setObjectName(cls._GUID)
         return toolBar
 
 ################################################################################
@@ -49,6 +50,9 @@ the refcount either. That means:
     - we do need to clear the stored reference ourselves.
 '''
 class Controller(QObject):
+    _NAME = "Feature Navigation Controller"
+    _GUID = IDENTIFIERS.PREFIX+_NAME.replace(" ", "")
+
     didSelectFeature = pyqtSignal(object)
 
     def __init__(self, iface, toolBar):
@@ -60,21 +64,14 @@ class Controller(QObject):
         self._resetController.setDelegate(self)
         self._indexController.didSelectFeature.connect(self.didSelectFeature)
 
-        self._iface.setProperty(self.KEY, self)
+        self._iface.setProperty(self._GUID, self)
 
     def __del__(self):
-        self._iface.setProperty(self.KEY, None)
+        self._iface.setProperty(self._GUID, None)
 
     ########################################################################
     ### API
     ########################################################################
-
-    _NAME = "Feature Navigation Controller"
-    _GUID = IDENTIFIERS.PREFIX+_NAME.replace(" ", "")
-
-    @property
-    def KEY(self):
-        return IDENTIFIERS.PREFIX+self._NAME.replace(" ", "")
 
     def activeLayer(self):
         return self._indexController.layer()
