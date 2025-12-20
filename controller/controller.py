@@ -1,11 +1,21 @@
 
+
+from .. import IDENTIFIERS
+
+
 ################################################################################
-### Toolbar Name
+### Toolbar
 ################################################################################
 
-from .language import _str
-class TOOLBAR:
-    NAME = _str("Feature Navigation Toolbar")
+from ..language import _str
+
+class ToolBar:
+    _NAME = "Feature Navigation Toolbar"
+
+    def __new__(cls, iface):
+        toolBar = iface.addToolBar(_str(cls._NAME))
+        toolBar.setObjectName(cls._NAME)
+        return toolBar
 
 ################################################################################
 
@@ -19,18 +29,18 @@ from .dialog import ResetDialog
 ### NavigationController
 ################################################################################
 '''
-NavigationController is the main controller.
+Controller is the main controller.
 It merely manages two subcontrollers that do the actual work.
 
-NavigationController
+Controller
     ResetController <-- responsible for reset button
         ResetTools
     IndexController <-- responsible for index buttons
         IndexTools
 
-NavigationController is available to other plugins via:
+The Controller instance is available to other plugins via:
 
-    navCtl = self._iface.property("32bt.fnt.NavigationController")
+    navCtl = self._iface.property("32bt.fnt.FeatureNavigationController")
 
 Note that an unknown Python object offered to setProperty is likely stored as
 an integer. It is therefore not a true weak reference, but will not increase
@@ -38,7 +48,7 @@ the refcount either. That means:
     - it is not a circular reference, so __del__ will eventually be called
     - we do need to clear the stored reference ourselves.
 '''
-class NavigationController(QObject):
+class Controller(QObject):
     didSelectFeature = pyqtSignal(object)
 
     def __init__(self, iface, toolBar):
@@ -59,9 +69,12 @@ class NavigationController(QObject):
     ### API
     ########################################################################
 
+    _NAME = "Feature Navigation Controller"
+    _GUID = IDENTIFIERS.PREFIX+_NAME.replace(" ", "")
+
     @property
     def KEY(self):
-        return "32bt.fnt.NavigationController"
+        return IDENTIFIERS.PREFIX+self._NAME.replace(" ", "")
 
     def activeLayer(self):
         return self._indexController.layer()

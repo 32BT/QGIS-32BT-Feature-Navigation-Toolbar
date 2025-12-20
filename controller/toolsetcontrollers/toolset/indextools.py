@@ -4,19 +4,35 @@ from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtWidgets import *
 from qgis.PyQt.QtGui import *
 
-
 from .toolset import ToolSet
 
 
 class IndexTools(ToolSet):
     indexChanged = pyqtSignal(object)
 
+    class TOOL:
+        class PREV:
+            class PAGE:
+                NAME = "First"
+                ICON = "mActionDoubleArrowLeft.svg"
+            class ITEM:
+                NAME = "Previous"
+                ICON = "mActionArrowLeft.svg"
+        class NEXT:
+            class ITEM:
+                NAME = "Next"
+                ICON = "mActionArrowRight.svg"
+            class PAGE:
+                NAME = "Last"
+                ICON = "mActionDoubleArrowRight.svg"
+
+
     def __init__(self, toolBar):
         super().__init__(toolBar, {
-            "First": "mActionDoubleArrowLeft.svg",
-            "Previous": "mActionArrowLeft.svg",
-            "Next": "mActionArrowRight.svg",
-            "Last": "mActionDoubleArrowRight.svg"})
+            self.TOOL.PREV.PAGE.NAME: self.TOOL.PREV.PAGE.ICON,
+            self.TOOL.PREV.ITEM.NAME: self.TOOL.PREV.ITEM.ICON,
+            self.TOOL.NEXT.ITEM.NAME: self.TOOL.NEXT.ITEM.ICON,
+            self.TOOL.NEXT.PAGE.NAME: self.TOOL.NEXT.PAGE.ICON})
         self.reset()
 
 
