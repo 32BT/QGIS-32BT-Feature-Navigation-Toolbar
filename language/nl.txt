@@ -18,3 +18,16 @@ de nieuwe selectie?
 
 layer '{}'?
 laag '{}'?
+
+# Toolbar itemnames
+First
+Eerste
+
+Previous
+Vorige
+
+Next
+Volgende
+
+Last
+Laatste
