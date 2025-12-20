@@ -2,7 +2,8 @@
 
 from qgis.PyQt.QtWidgets import *
 
-from ..language import _str
+import sys
+_str = sys.modules.get(__name__.split('.')[0]).language._str
 
 ################################################################################
 ### ResetDialog

@@ -1,3 +1,3 @@
 
-from .controller import TOOLBAR
-from .controller import NavigationController
+from .controller import ToolBar
+from .controller import Controller

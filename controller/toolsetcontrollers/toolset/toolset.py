@@ -1,10 +1,14 @@
 
-import os
+import os, sys
 
 from qgis.core import *
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtWidgets import *
 from qgis.PyQt.QtGui import *
+
+import sys
+_str = sys.modules.get(__name__.split('.')[0]).language._str
+
 
 
 def LOG(*S):
@@ -40,10 +44,20 @@ class ToolSet(QObject):
     def _prepareAction(self, icon, name, proc=None):
         if isinstance(icon, str):
             icon = self._load_icon(icon)
-        action = QAction(icon, name)
+        action = QAction(icon, _str(name))
+        action.setObjectName(self._make_object_name(name))
         action.setEnabled(False)
         if proc: action.triggered.connect(proc)
         return action
+
+
+    @classmethod
+    def _make_object_name(cls, name):
+        print(__name__)
+        mod = cls.__module__.split('.')[0]
+        mod = sys.modules.get(mod)
+        return mod.IDENTIFIERS.PREFIX+name
+
 
 
     def _load_icon(self, path):

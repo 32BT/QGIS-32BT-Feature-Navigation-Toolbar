@@ -31,14 +31,14 @@ If only one feature is selected, the start-button will not be available. This is
 The plugin will be available to other plugins through the iface var. If you have a plugin class with iface stored in self._iface, the navigation controller can be found as follows:
 
 ```python
-navCtl = self._iface.property("32bt.fnt.NavigationController")
+navCtl = self._iface.property("32bt.fnt.FeatureNavigationController")
 ```  
 
 The navigation controller has a method named "selectNextFeature" which can be called after processing a feature. This will trigger the navigation controller to zoom to and select the next feature from the original selection and update the toolbar accordingly. It also stores the current selection in the parsed set of features. Since the plugin may not necessarily be available, your code should look something like this:
 
 ```python
 def selectNextFeature(self, layer):
-    navCtl = self._iface.property("32bt.fnt.NavigationController")
+    navCtl = self._iface.property("32bt.fnt.FeatureNavigationController")
     if navCtl: navCtl.selectNextFeature(layer)
 ```
 
@@ -55,7 +55,7 @@ Removing the selection if the layer does not match, is a "convenience" function 
 
 ```python
 def selectNextFeature(self, layer):
-    navCtl = self._iface.property("32bt.fnt.NavigationController")
+    navCtl = self._iface.property("32bt.fnt.FeatureNavigationController")
     if navCtl and navCtl.activeLayer()==layer:
         navCtl.selectNextFeature(layer)
     else:
