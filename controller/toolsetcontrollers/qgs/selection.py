@@ -27,14 +27,14 @@ class Selection(QObject):
     def __init__(self, iface):
         super().__init__()
         self._iface = iface
-        self._iface.currentLayerChanged.connect(self.currentLayerChanged)
-        self._layer = None
+        self._iface.currentLayerChanged.connect(self.setLayer)
+        self.setLayer(iface.activeLayer())
 
     def __del__(self):
-        self._iface.currentLayerChanged.disconnect(self.currentLayerChanged)
+        self._iface.currentLayerChanged.disconnect(self.setLayer)
         self._iface = None
 
-    def currentLayerChanged(self, layer):
+    def setLayer(self, layer):
         self._layer = None
         if hasattr(layer, 'selectionChanged'):
             self._layer = Layer(layer)
