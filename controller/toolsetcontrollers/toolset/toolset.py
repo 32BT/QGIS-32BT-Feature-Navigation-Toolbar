@@ -6,14 +6,15 @@ from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtWidgets import *
 from qgis.PyQt.QtGui import *
 
+################################################################################
 import sys
-_str = sys.modules.get(__name__.split('.')[0]).language._str
+_MOD = sys.modules.get(__name__.split('.')[0])
+_str = _MOD.language._str
 
+def _objectname(name):
+    return _MOD.IDENTITY.PREFIX+name
+################################################################################
 
-
-def LOG(*S):
-    S = ', '.join(str(s) for s in S)
-    QgsMessageLog.logMessage(S, tag='32BT', level=Qgis.Info)
 
 class ToolSet(QObject):
     actionTriggered = pyqtSignal(object)
@@ -45,19 +46,10 @@ class ToolSet(QObject):
         if isinstance(icon, str):
             icon = self._load_icon(icon)
         action = QAction(icon, _str(name))
-        action.setObjectName(self._make_object_name(name))
+        action.setObjectName(_objectname(name))
         action.setEnabled(False)
         if proc: action.triggered.connect(proc)
         return action
-
-
-    @classmethod
-    def _make_object_name(cls, name):
-        print(__name__)
-        mod = cls.__module__.split('.')[0]
-        mod = sys.modules.get(mod)
-        return mod.IDENTIFIERS.PREFIX+name
-
 
 
     def _load_icon(self, path):
