@@ -1,20 +1,19 @@
 
-
-from .. import IDENTITY as PLUGIN
-
+import sys
+_MOD = sys.modules.get(__name__.split('.')[0])
+_IDENTITY = _MOD.IDENTITY
+_LANGUAGE = _MOD.LANGUAGE
 
 ################################################################################
 ### Toolbar
 ################################################################################
 
-from ..language import _str
-
 class ToolBar:
     _NAME = "Feature Navigation Toolbar"
-    _GUID = PLUGIN.PREFIX+_NAME.replace(" ", "")
+    _GUID = _IDENTITY.PREFIX+_NAME.replace(" ", "")
 
     def __new__(cls, iface):
-        toolBar = iface.addToolBar(_str(cls._NAME))
+        toolBar = iface.addToolBar(_LANGUAGE.STR(cls._NAME))
         toolBar.setObjectName(cls._GUID)
         return toolBar
 
@@ -51,7 +50,7 @@ the refcount either. That means:
 '''
 class Controller(QObject):
     _NAME = "Feature Navigation Controller"
-    _GUID = PLUGIN.PREFIX+_NAME.replace(" ", "")
+    _GUID = _IDENTITY.PREFIX+_NAME.replace(" ", "")
 
     didSelectFeature = pyqtSignal(object)
 

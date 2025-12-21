@@ -9,7 +9,7 @@ from qgis.PyQt.QtGui import *
 ################################################################################
 import sys
 _MOD = sys.modules.get(__name__.split('.')[0])
-_str = _MOD.language._str
+_str = _MOD.LANGUAGE.STR
 
 def _objectname(name):
     return _MOD.IDENTITY.PREFIX+name
