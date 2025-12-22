@@ -1,7 +1,7 @@
 
 from qgis.core import *
 from qgis.PyQt import uic
-from qgis.PyQt.QtGui import QValidator
+from qgis.PyQt.QtGui import *
 from qgis.PyQt.QtCore import *
 from qgis.PyQt.QtWidgets import QDialog
 
@@ -15,6 +15,10 @@ def _form():
     form, _ = uic.loadUiType(path+'.ui')
     return form
 
+def _int(x, alt=None):
+    try: return int(x or 0)
+    except (TypeError, ValueError): return alt
+
 ################################################################################
 ### ResetDialog
 ################################################################################
@@ -25,7 +29,7 @@ _STR = _MOD.LANGUAGE.STR
 
 _TITLE = _STR("Reset Navigation")
 _SELECT_INFO = _STR("You have {} features selected for navigation in layer '{}'.")
-_SAMPLE_BOX = _STR("Random subset")
+_SAMPLE_BOX = _STR("Random sample")
 _SAMPLE_INFO = _STR("Select or enter the desired samplesize below.")
 _SAMPLE_SIZE = _STR("Samplesize:")
 _SAMPLE_COUNT = _STR("Count:")
@@ -44,15 +48,21 @@ class Dialog(QDialog, _form()):
         validator = self.Validator()
         self.sampleCombo.setValidator(validator)
         self.sampleCombo.lineEdit().setValidator(validator)
+        self.sampleCount.setValidator(self.IntValidator())
 
         self.sampleCombo.currentTextChanged.connect(self.sampleComboChanged)
         self.sampleCount.textEdited.connect(self.sampleCountChanged)
+        self.sampleCount.editingFinished.connect(self.sampleCountFinished)
+
+
+    def sampleComboChanged(self, txt):
+        self.controlChanged(self.sampleCombo)
 
     def sampleCountChanged(self):
         self.controlChanged(self.sampleCount)
 
-    def sampleComboChanged(self, txt):
-        self.controlChanged(self.sampleCombo)
+    def sampleCountFinished(self):
+        self.setSize(self.getSize())
 
     def controlChanged(self, sender):
         maxSize = self._layer.selectedFeatureCount()
@@ -70,18 +80,48 @@ class Dialog(QDialog, _form()):
 
 
     def confirmReset(self, layer):
+        size = self.setLayer(layer)
+        self.setSize(size)
+        if self.exec():
+            return self.getSize()
+
+    def setLayer(self, layer):
         self._layer = layer
         name = layer.name()
         size = layer.selectedFeatureCount()
         self.selectionInfo.setText(_SELECT_INFO.format(size, name))
-        self.setSize(size)
-        if self.exec():
-            return self.getPercentage()
+        self.sampleCount.setValidator(self.IntValidator(2, size))
+        return size
 
     def altKeyActive(self):
         modifiers = QgsApplication.instance().keyboardModifiers()
         return bool(modifiers & Qt.AltModifier)
 
+    def getPercentage(self):
+        try:
+            txt = self.sampleCombo.currentText()
+            return int(txt.replace("%", "") or 0)
+        except Exception as error:
+            return 100
+
+    def setPercentage(self, p):
+        self.sampleCombo.setCurrentText(str(p)+"%")
+
+    def setSize(self, size):
+        size = self.limitSize(size)
+        self.sampleCount.setText(str(size))
+
+    def getSize(self):
+        if not self.sampleBox.isChecked():
+            return self.maxSize()
+        try:
+            size = int(self.sampleCount.text() or 0)
+            return self.limitSize(size)
+        except Exception:
+            return self.maxSize()
+
+    def limitSize(self, size):
+        return min(max(2, size), self.maxSize())
 
     def maxSize(self):
         maxSize = 2
@@ -90,27 +130,20 @@ class Dialog(QDialog, _form()):
                 maxSize = self._layer.selectedFeatureCount()
         return maxSize
 
-    def limitSize(self, size):
-        return min(max(2, size), self.maxSize())
-
-    def getSize(self):
-        size = int(self.sampleCount.text())
-        return self.limitSize(size)
-
-    def setSize(self, size):
-        size = self.limitSize(size)
-        self.sampleCount.setText(str(size))
-
-    def getPercentage(self):
-        try:
-            txt = self.sampleCombo.currentText()
-            return int(txt.replace("%", ""))
-        except Exception as error:
-            print(repr(error))
-            return 0
-
-    def setPercentage(self, p):
-        self.sampleCombo.setCurrentText(str(p)+"%")
+    ########################################################################
+    ### Validators
+    ########################################################################
+    '''
+    Returning state "Intermediate" will not trigger editingFinished,
+    so we allow empty text as "Acceptable". It does mean that "getSize"
+    should be prepared for empty text.
+    '''
+    class IntValidator(QIntValidator):
+        def validate(self, txt, pos):
+            state, txt, pos = super().validate(txt, pos)
+            if state != self.State.Invalid:
+                state = self.State.Acceptable
+            return state, txt, pos
 
 
     class Validator(QValidator):

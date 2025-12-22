@@ -105,14 +105,13 @@ class Controller(QObject):
 
     TODO some scenarios might even require a disabled/locked reset button?
     '''
-    def confirmReset(self, new_layer):
+    def confirmReset(self, layer):
         parent = self._iface.mainWindow()
-        result = ResetDialog(parent).confirmReset(new_layer)
-        if result is not None:
-            if 0 < result < 100:
-                A = new_layer.selectedFeatureIds()
-                n = int(result * len(A) + 99)//100
-                A = random.sample(A, k=max(2,n))
-                new_layer.selectByIds(A)
+        sample = ResetDialog(parent).confirmReset(layer)
+        if sample is not None:
+            if 2 <= sample < layer.selectedFeatureCount():
+                A = layer.selectedFeatureIds()
+                A = random.sample(A, k=sample)
+                layer.selectByIds(A)
             return True
         return False
