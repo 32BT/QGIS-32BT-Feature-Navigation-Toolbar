@@ -7,17 +7,21 @@ Reset Navigation
 Navigatie Wijzigen
 
 # Reset Dialog Text
-Navigation is currently set to layer '{}'.
-Navigatie staat momenteel ingesteld op laag '{}'.
+You have {} features selected for navigation in layer '{}'.
+Er zijn {} objecten geselecteerd voor navigatie in de laag '{}'.
 
-Do you want to reset to
-Wil je navigatie wijzigen naar
+Random subset
+Steekproef
 
-the new selection?
-de nieuwe selectie?
+Select or enter the desired samplesize below.
+Vul hieronder de gewenste steekproefgrootte in.
 
-layer '{}'?
-laag '{}'?
+Samplesize:
+Steekproefpercentage:
+
+Count:
+Aantal:
+
 
 # Toolbar itemnames
 First

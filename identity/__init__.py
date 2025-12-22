@@ -1,0 +1,4 @@
+
+AUTHOR = '32bt'
+MODULE = 'fnt'
+PREFIX = AUTHOR+'.'+MODULE+'.'

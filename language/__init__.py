@@ -9,7 +9,7 @@ _dictionary = None
 ################################################################################
 '''
 '''
-class _str(str):
+class String(str):
     language = QgsApplication.instance().locale()
 
     def __new__(cls, txt):

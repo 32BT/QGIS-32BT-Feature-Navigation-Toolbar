@@ -19,6 +19,9 @@ class ToolBar:
 
 ################################################################################
 
+import random
+
+from qgis.core import *
 from qgis.PyQt.QtCore import *
 
 from .toolsetcontrollers import ResetController
@@ -103,13 +106,13 @@ class Controller(QObject):
     TODO some scenarios might even require a disabled/locked reset button?
     '''
     def confirmReset(self, new_layer):
-        old_layer = self._indexController.layer()
-        if old_layer is None:
-            # Reset from None means there was no active session
+        parent = self._iface.mainWindow()
+        result = ResetDialog(parent).confirmReset(new_layer)
+        if result is not None:
+            if 0 < result < 100:
+                A = new_layer.selectedFeatureIds()
+                n = int(result * len(A) + 99)//100
+                A = random.sample(A, k=max(2,n))
+                new_layer.selectByIds(A)
             return True
-        else:
-            # There is an active session, ask confirmation
-            parent = self._iface.mainWindow()
-            return ResetDialog(parent).confirmReset(old_layer, new_layer)
-
-
+        return False
