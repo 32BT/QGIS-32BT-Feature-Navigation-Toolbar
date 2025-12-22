@@ -10,7 +10,8 @@ Navigatie Wijzigen
 You have {} features selected for navigation in layer '{}'.
 Er zijn {} objecten geselecteerd voor navigatie in de laag '{}'.
 
-Random subset
+# Samplebox
+Random sample
 Steekproef
 
 Select or enter the desired samplesize below.
