@@ -1,58 +1,130 @@
 
+from qgis.core import *
+from qgis.PyQt import uic
+from qgis.PyQt.QtGui import QValidator
+from qgis.PyQt.QtCore import *
+from qgis.PyQt.QtWidgets import QDialog
 
-from qgis.PyQt.QtWidgets import *
 
-import sys
-_str = sys.modules.get(__name__.split('.')[0]).language._str
+################################################################################
+
+import os
+
+def _form():
+    path, ext = os.path.splitext(__file__)
+    form, _ = uic.loadUiType(path+'.ui')
+    return form
 
 ################################################################################
 ### ResetDialog
 ################################################################################
-'''
-The pattern for one of our dialogs would normally look like this:
 
-    SomeDialog(parent).askParameter(currentValue)
+import sys
+_MOD = sys.modules.get(__name__.split('.')[0])
+_STR = _MOD.LANGUAGE.STR
 
-Based on QDialog it would look somewhat like so:
+_TITLE = _STR("Reset Navigation")
+_SELECT_INFO = _STR("You have {} features selected for navigation in layer '{}'.")
+_SAMPLE_BOX = _STR("Random subset")
+_SAMPLE_INFO = _STR("Select or enter the desired samplesize below.")
+_SAMPLE_SIZE = _STR("Samplesize:")
+_SAMPLE_COUNT = _STR("Count:")
 
-    class SomeDialog(QDialog):
-        def __init__(self, parent=None):
-            super().__init__(parent=parent)
-            <more setup>
+class Dialog(QDialog, _form()):
 
-        def askParameter(self, currentValue):
-            self.setValue(currentValue)
-            if self.exec():
-                return self.getValue()
-
-The ResetDialog however, is a simple confirmation dialog and can use one of
-the simple convenience dialogclasses. Even so, we maintain the same pattern.
-
-    ResetDialog(parent).confirmReset(...)
-'''
-
-class ResetDialog:
     def __init__(self, parent):
-        self._parent = parent
+        super().__init__(parent)
+        self.setupUi(self)
+        # Ensure translated labels
+        self.setWindowTitle(_TITLE)
+        self.sampleBox.setTitle(_SAMPLE_BOX)
+        self.sampleInfo.setText(_SAMPLE_INFO)
+        self.sampleComboLabel.setText(_SAMPLE_SIZE)
+        self.sampleCountLabel.setText(_SAMPLE_COUNT)
+        validator = self.Validator()
+        self.sampleCombo.setValidator(validator)
+        self.sampleCombo.lineEdit().setValidator(validator)
 
-    def confirmReset(self, old_layer, new_layer=None):
-        parent = self._parent
-        title = self.prepareConfirmResetTitle()
-        label = self.prepareConfirmResetLabel(old_layer, new_layer)
-        buttons = QMessageBox.StandardButton.Cancel | QMessageBox.StandardButton.Ok
-        defaultButton = QMessageBox.StandardButton.Cancel
-        result = QMessageBox.warning(parent, title, label, buttons, defaultButton)
-        return result == QMessageBox.StandardButton.Ok
+        self.sampleCombo.currentTextChanged.connect(self.sampleComboChanged)
+        self.sampleCount.textEdited.connect(self.sampleCountChanged)
 
-    def prepareConfirmResetTitle(self):
-        return _str("Reset Navigation")
+    def sampleCountChanged(self):
+        self.controlChanged(self.sampleCount)
 
-    def prepareConfirmResetLabel(self, old_layer, new_layer=None):
-        text = _str("Navigation is currently set to layer '{}'.\n").format(old_layer.name())
-        text += _str("Do you want to reset to ")
-        if old_layer == new_layer:
-            text += _str("the new selection?")
-        else:
-            text += _str("layer '{}'?").format(new_layer.name())
-        return text
+    def sampleComboChanged(self, txt):
+        self.controlChanged(self.sampleCombo)
+
+    def controlChanged(self, sender):
+        maxSize = self._layer.selectedFeatureCount()
+        if sender == self.sampleCount:
+            n = self.getSize()
+            p = round(100 * n / self.maxSize())
+            with QSignalBlocker(self.sampleCombo):
+                self.setPercentage(p)
+        elif sender == self.sampleCombo:
+            p = self.getPercentage()
+            n = (p * self.maxSize() + 99) // 100
+            with QSignalBlocker(self.sampleCount):
+                self.setSize(n)
+
+
+
+    def confirmReset(self, layer):
+        self._layer = layer
+        name = layer.name()
+        size = layer.selectedFeatureCount()
+        self.selectionInfo.setText(_SELECT_INFO.format(size, name))
+        self.setSize(size)
+        if self.exec():
+            return self.getPercentage()
+
+    def altKeyActive(self):
+        modifiers = QgsApplication.instance().keyboardModifiers()
+        return bool(modifiers & Qt.AltModifier)
+
+
+    def maxSize(self):
+        maxSize = 2
+        if hasattr(self, '_layer'):
+            if self._layer and self._layer.isValid():
+                maxSize = self._layer.selectedFeatureCount()
+        return maxSize
+
+    def limitSize(self, size):
+        return min(max(2, size), self.maxSize())
+
+    def getSize(self):
+        size = int(self.sampleCount.text())
+        return self.limitSize(size)
+
+    def setSize(self, size):
+        size = self.limitSize(size)
+        self.sampleCount.setText(str(size))
+
+    def getPercentage(self):
+        try:
+            txt = self.sampleCombo.currentText()
+            return int(txt.replace("%", ""))
+        except Exception as error:
+            print(repr(error))
+            return 0
+
+    def setPercentage(self, p):
+        self.sampleCombo.setCurrentText(str(p)+"%")
+
+
+    class Validator(QValidator):
+        def validate(self, txt, pos):
+            if not txt:
+                state = self.State.Intermediate
+            elif self.acceptable(txt):
+                state = self.State.Acceptable
+            else:
+                state = self.State.Invalid
+            return (state, txt, pos)
+
+        def acceptable(self, txt):
+            try: return 0 < int(txt.replace("%","")) <= 100
+            except Exception: return False
+
 

@@ -1,11 +1,9 @@
 
 class IDENTITY:
-    AUTHOR = '32bt'
-    MODULE = 'fnt'
-    PREFIX = AUTHOR+'.'+MODULE+'.'
+    from .identity import PREFIX
 
 class LANGUAGE:
-    from .language import _str as STR
+    from .language import String as STR
 
 def classFactory(iface):
     from .plugin import Plugin
