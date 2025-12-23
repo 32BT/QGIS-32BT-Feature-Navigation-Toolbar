@@ -55,4 +55,3 @@ class Layer(QObject):
         self.selectedFeaturesChanged.emit(self._layer)
 
 ################################################################################
-
