@@ -11,15 +11,15 @@ from .toolset import ResetTools
 '''
 First tool in a toolbar is usually a start button. This button is controlled
 separately by the resetcontroller as it is a metaproces. It emits two signals:
-1. a signal to request the validity of the currently active layer and selection,
+1. a signal to request the validity of the resetaction,
 2. a signal if the resetaction was triggered.
 
 This allows another controller to act as delegate for the signals. This usually
 is the main controller:
 
-    maincontroller <--------|
+    MainController <--------|
      |                      |
-     |  ResetController     |
+     |->ResetController     |
      |      validateReset --|
      |      handleReset   --|
      |
@@ -49,7 +49,6 @@ class ResetController(ToolsController):
         if hasattr(delegate, "resetClicked"):
             self.resetClicked.connect(delegate.resetClicked)
         self.updateActions()
-
 
     def updateActions(self):
         layer = self._iface.activeLayer()
