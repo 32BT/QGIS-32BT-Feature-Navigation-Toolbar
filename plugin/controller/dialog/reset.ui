@@ -7,15 +7,15 @@
     <x>0</x>
     <y>0</y>
     <width>445</width>
-    <height>196</height>
+    <height>105</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Reset Navigation</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
-    <number>11</number>
+    <number>0</number>
    </property>
    <item>
     <widget class="QLabel" name="selectionInfo">
@@ -31,116 +31,45 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="sampleBox">
-     <property name="title">
-      <string>Steekproef</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QLabel" name="sampleInfo">
-        <property name="text">
-         <string>Geef hieronder de gewenste steekproefgrootte op.</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="sampleComboLabel">
-          <property name="text">
-           <string>Steekproefpercentage</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="sampleCombo">
-          <property name="editable">
-           <bool>true</bool>
-          </property>
-          <item>
-           <property name="text">
-            <string>100%</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>50%</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>33%</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>25%</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>20%</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>10%</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>5%</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="sampleCountLabel">
-          <property name="text">
-           <string>Aantal:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="sampleCount">
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <spacer name="verticalSpacer">
+    <spacer name="verticalSpacer1">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>40</height>
+       <height>11</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="sampleCheckBox">
+     <property name="font">
+      <font>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Steekproef</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::MinimumExpanding</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>11</height>
       </size>
      </property>
     </spacer>
