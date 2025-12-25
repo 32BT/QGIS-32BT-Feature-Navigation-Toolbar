@@ -6,6 +6,11 @@ from qgis.PyQt.QtGui import *
 
 from .toolset import ToolSet
 
+################################################################################
+import sys
+_MOD = sys.modules.get(__name__.split('.')[0])
+_UID = _MOD.IDENTITY.PREFIX
+################################################################################
 
 class IndexTools(ToolSet):
     indexChanged = pyqtSignal(object)
@@ -40,7 +45,9 @@ class IndexTools(ToolSet):
     def _prepareToolBar(self, toolBar, actions):
         super()._prepareToolBar(toolBar, actions)
         self._label = QLabel()
-        toolBar.insertWidget(actions[-2], self._label)
+        action = toolBar.insertWidget(actions[-2], self._label)
+        action.setText("Index")
+        action.setObjectName(_UID+"Infolabel")
 
     ########################################################################
     ### Reset
