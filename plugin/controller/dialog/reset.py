@@ -16,18 +16,14 @@ def _form():
     form, _ = uic.loadUiType(path+'.ui')
     return form
 
-def _int(x, alt=None):
-    try: return int(x or 0)
-    except (TypeError, ValueError): return alt
-
 ################################################################################
 ### ResetDialog
 ################################################################################
 
 import sys
+
 _MOD = sys.modules.get(__name__.split('.')[0])
 _STR = _MOD.LANGUAGE.STR
-
 _TITLE = _STR("Reset Navigation")
 _LABEL = _STR("You have {} features selected for navigation in layer '{}'.")
 _CHECK = _STR("Random sample")
