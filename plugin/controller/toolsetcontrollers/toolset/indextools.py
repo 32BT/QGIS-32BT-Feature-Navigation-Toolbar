@@ -7,9 +7,7 @@ from qgis.PyQt.QtGui import *
 from .toolset import ToolSet
 
 ################################################################################
-import sys
-_MOD = sys.modules.get(__name__.split('.')[0])
-_UID = _MOD.IDENTITY.PREFIX
+### IndexTools
 ################################################################################
 
 class IndexTools(ToolSet):
@@ -31,6 +29,10 @@ class IndexTools(ToolSet):
                 NAME = "Last"
                 ICON = "mActionDoubleArrowRight.svg"
 
+    class LABEL:
+        NAME = "Index"
+        GUID = NAME+"Label"
+
 
     def __init__(self, toolBar):
         super().__init__(toolBar, {
@@ -41,13 +43,14 @@ class IndexTools(ToolSet):
         self.reset()
 
 
-    # Add a label between indexbuttons
+    # Override to add a label between indexbuttons
     def _prepareToolBar(self, toolBar, actions):
         super()._prepareToolBar(toolBar, actions)
+        # Add a label between indexbuttons
         self._label = QLabel()
         action = toolBar.insertWidget(actions[-2], self._label)
-        action.setText("Index")
-        action.setObjectName(_UID+"Infolabel")
+        action.setText(self.LABEL.NAME)
+        action.setObjectName(self.LABEL.GUID)
 
     ########################################################################
     ### Reset

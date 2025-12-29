@@ -12,7 +12,7 @@ _MODULE = sys.modules.get(__name__.split('.')[0])
 _LABELS = _MODULE.LANGUAGE.LABELS()
 
 def _objectname(name):
-    return _MODULE.IDENTITY.PREFIX+name
+    return name.replace(" ", "")
 ################################################################################
 
 

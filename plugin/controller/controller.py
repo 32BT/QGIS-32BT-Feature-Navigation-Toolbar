@@ -63,6 +63,8 @@ class Controller(QObject):
 
     def __init__(self, iface, toolBar):
         super().__init__()
+        self.setObjectName(self._GUID)
+
         self._iface = iface
         self._resetController = ResetController(iface, toolBar)
         self._indexController = IndexController(iface, toolBar)

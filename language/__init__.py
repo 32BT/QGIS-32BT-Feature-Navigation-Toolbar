@@ -7,14 +7,12 @@ from qgis.core import QgsApplication
 ### Labels
 ################################################################################
 '''
-For translated labels by reference:
-    _LABELS = LABELS(...)
-    _LABELS.CUSTOM_LABEL1
+Following will all return the same result:
 
-For direct translation by text:
-    _LABELS = LABELS(...)
-    translated_label = _LABELS("Custom Label 1")
-
+    LABELS.CUSTOM_LABEL
+    LABELS("CUSTOM_LABEL")
+    LABELS["CUSTOM_LABEL"]
+    LABELS.get("CUSTOM_LABEL")
 '''
 import os, json
 
@@ -24,13 +22,19 @@ class LABELS(dict):
         super().update(self.loadLanguage() or {})
 
     def __call__(self, k):
-        return self.__getattr__(k) or k or ""
+        return self.get(k)
 
     def __getattr__(self, k):
-        v = self.get(k)
+        return self.get(k)
+
+    def __getitem__(self, k):
+        return self.get(k)
+
+    def get(self, k):
+        v = super().get(k)
         if isinstance(v, list):
             v = '\n'.join(v)
-        return v or ""
+        return v or k or ""
 
     @classmethod
     def loadLanguage(cls, lang=None):
