@@ -8,11 +8,11 @@ from qgis.PyQt.QtGui import *
 
 ################################################################################
 import sys
-_MOD = sys.modules.get(__name__.split('.')[0])
-_str = _MOD.LANGUAGE.STR
+_MODULE = sys.modules.get(__name__.split('.')[0])
+_LABELS = _MODULE.LANGUAGE.LABELS()
 
 def _objectname(name):
-    return _MOD.IDENTITY.PREFIX+name
+    return name.replace(" ", "")
 ################################################################################
 
 
@@ -45,7 +45,7 @@ class ToolSet(QObject):
     def _prepareAction(self, icon, name, proc=None):
         if isinstance(icon, str):
             icon = self._load_icon(icon)
-        action = QAction(icon, _str(name))
+        action = QAction(icon, _LABELS(name))
         action.setObjectName(_objectname(name))
         action.setEnabled(False)
         if proc: action.triggered.connect(proc)

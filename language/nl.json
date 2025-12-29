@@ -1,0 +1,40 @@
+{
+    "TOOLBAR_TITLE":
+    "Werkbalk Objectnavigatie",
+
+    "TOOLBAR_ITEM1":
+    "Eerste",
+
+    "TOOLBAR_ITEM2":
+    "Vorige",
+
+    "TOOLBAR_ITEM3":
+    "Volgende",
+
+    "TOOLBAR_ITEM4":
+    "Laatste",
+
+    "RESETDIALOG_TITLE":
+    "Navigatie Wijzigen",
+
+    "RESETDIALOG_LABEL":
+    "Er zijn {} objecten geselecteerd voor navigatie in de laag '{}'.",
+
+    "SAMPLEBOX_TITLE":
+    "Steekproef",
+
+    "SAMPLEBOX_LABEL":
+    "Vul hieronder de gewenste steekproefgrootte in.",
+
+    "SAMPLEBOX_SIZELABEL":
+    "Steekproefpercentage:",
+
+    "SAMPLEBOX_COUNTLABEL":
+    "Aantal:",
+
+    "Feature Navigation Toolbar": "Werkbalk Objectnavigatie",
+    "First": "Eerste",
+    "Previous": "Vorige",
+    "Next": "Volgende",
+    "Last": "Laatste"
+}

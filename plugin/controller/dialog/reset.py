@@ -17,16 +17,23 @@ def _form():
     return form
 
 ################################################################################
-### ResetDialog
+### Labels
 ################################################################################
 
 import sys
+_MODULE = sys.modules.get(__name__.split('.')[0])
 
-_MOD = sys.modules.get(__name__.split('.')[0])
-_STR = _MOD.LANGUAGE.STR
-_TITLE = _STR("Reset Navigation")
-_LABEL = _STR("You have {} features selected for navigation in layer '{}'.")
-_CHECK = _STR("Random sample")
+_LABELS = _MODULE.LANGUAGE.LABELS({
+    "RESETDIALOG_TITLE":
+        "Reset Navigation",
+    "RESETDIALOG_LABEL":
+        "You have {} features selected for navigation in layer '{}'.",
+    "SAMPLEBOX_TITLE":
+        "Random sample" })
+
+################################################################################
+### ResetDialog
+################################################################################
 
 class Dialog(QDialog, _form()):
 
@@ -34,8 +41,8 @@ class Dialog(QDialog, _form()):
         super().__init__(parent)
         self.setupUi(self)
         # Ensure translated labels
-        self.setWindowTitle(_TITLE)
-        self.sampleCheckBox.setText(_CHECK)
+        self.setWindowTitle(_LABELS.RESETDIALOG_TITLE)
+        self.sampleCheckBox.setText(_LABELS.SAMPLEBOX_TITLE)
         self.sampleCheckBox.toggled.connect(self.sampleCheckBoxToggled)
         self.sampleBox = None
 
@@ -57,7 +64,8 @@ class Dialog(QDialog, _form()):
         self._layer = layer
         name = layer.name()
         size = layer.selectedFeatureCount()
-        self.selectionInfo.setText(_LABEL.format(size, name))
+        label = _LABELS.RESETDIALOG_LABEL.format(size, name)
+        self.selectionInfo.setText(label)
         self.maxSize = size
 
     def getSize(self):

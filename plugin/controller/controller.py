@@ -1,8 +1,11 @@
 
+
 import sys
-_MOD = sys.modules.get(__name__.split('.')[0])
-_IDENTITY = _MOD.IDENTITY
-_LANGUAGE = _MOD.LANGUAGE
+_MODULE = sys.modules.get(__name__.split('.')[0])
+_IDENTITY = _MODULE.IDENTITY
+_LANGUAGE = _MODULE.LANGUAGE
+_LABELS = _LANGUAGE.LABELS()
+
 
 ################################################################################
 ### Toolbar
@@ -13,7 +16,7 @@ class ToolBar:
     _GUID = _IDENTITY.PREFIX+_NAME.replace(" ", "")
 
     def __new__(cls, iface):
-        toolBar = iface.addToolBar(_LANGUAGE.STR(cls._NAME))
+        toolBar = iface.addToolBar(_LABELS(cls._NAME))
         toolBar.setObjectName(cls._GUID)
         return toolBar
 
@@ -51,6 +54,7 @@ the refcount either. That means:
     - it is not a circular reference, so __del__ will eventually be called
     - we do need to clear the stored reference ourselves.
 '''
+
 class Controller(QObject):
     _NAME = "Feature Navigation Controller"
     _GUID = _IDENTITY.PREFIX+_NAME.replace(" ", "")
@@ -59,6 +63,8 @@ class Controller(QObject):
 
     def __init__(self, iface, toolBar):
         super().__init__()
+        self.setObjectName(self._GUID)
+
         self._iface = iface
         self._resetController = ResetController(iface, toolBar)
         self._indexController = IndexController(iface, toolBar)

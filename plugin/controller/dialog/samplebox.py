@@ -1,4 +1,5 @@
 
+
 from qgis.core import *
 from qgis.PyQt import uic
 from qgis.PyQt.QtGui import *
@@ -15,22 +16,26 @@ def _form():
     form, _ = uic.loadUiType(path+'.ui')
     return form
 
-def _int(x, alt=None):
-    try: return int(x or 0)
-    except (TypeError, ValueError): return alt
+################################################################################
+### Labels
+################################################################################
+
+import sys
+_MODULE = sys.modules.get(__name__.split('.')[0])
+
+_LABELS = _MODULE.LANGUAGE.LABELS({
+    "SAMPLEBOX_TITLE":
+        "Random sample",
+    "SAMPLEBOX_LABEL":
+        "Select or enter the desired samplesize below.",
+    "SAMPLEBOX_SIZELABEL":
+        "Samplesize:",
+    "SAMPLEBOX_COUNTLABEL":
+        "Count:"})
 
 ################################################################################
 ### SampleBox
 ################################################################################
-
-import sys
-_MOD = sys.modules.get(__name__.split('.')[0])
-_STR = _MOD.LANGUAGE.STR
-
-_TITLE = _STR("Random sample")
-_LABEL = _STR("Select or enter the desired samplesize below.")
-_SAMPLE_SIZE = _STR("Samplesize:")
-_SAMPLE_COUNT = _STR("Count:")
 
 class SampleBox(QWidget, _form()):
 
@@ -38,9 +43,9 @@ class SampleBox(QWidget, _form()):
         super().__init__()
         self.setupUi(self)
 
-        self.sampleInfo.setText(_LABEL)
-        self.sampleComboLabel.setText(_SAMPLE_SIZE)
-        self.sampleCountLabel.setText(_SAMPLE_COUNT)
+        self.sampleInfo.setText(_LABELS.SAMPLEBOX_LABEL)
+        self.sampleComboLabel.setText(_LABELS.SAMPLEBOX_SIZELABEL)
+        self.sampleCountLabel.setText(_LABELS.SAMPLEBOX_COUNTLABEL)
         validator = self.IntValidator(1, 100, "%")
         self.sampleCombo.lineEdit().setValidator(validator)
         self.sampleCombo.lineEdit().setAlignment(Qt.AlignRight)
