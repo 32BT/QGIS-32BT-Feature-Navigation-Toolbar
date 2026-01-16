@@ -5,6 +5,17 @@ from qgis.PyQt.QtWidgets import *
 from qgis.PyQt.QtGui import *
 
 from .toolset import ToolSet
+from .indexmenu import IndexMenu
+
+class Label(QLabel):
+    def event(self, event):
+        if event.type() == event.Type.MouseButtonPress:
+            if hasattr(self, '_menu'):
+                x, y = 0, self.frameSize().height()
+                self._menu.popup(self.mapToGlobal(QPoint(x,y)))
+                return True
+        return super().event(event)
+
 
 ################################################################################
 ### IndexTools
@@ -47,10 +58,12 @@ class IndexTools(ToolSet):
     def _prepareToolBar(self, toolBar, actions):
         super()._prepareToolBar(toolBar, actions)
         # Add a label between indexbuttons
-        self._label = QLabel()
+        self._label = Label()
         action = toolBar.insertWidget(actions[-2], self._label)
         action.setText(self.LABEL.NAME)
         action.setObjectName(self.LABEL.GUID)
+
+        self._label._menu = IndexMenu(self._label)
 
     ########################################################################
     ### Reset

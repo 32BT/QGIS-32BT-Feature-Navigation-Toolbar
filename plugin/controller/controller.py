@@ -4,7 +4,8 @@ import sys
 _MODULE = sys.modules.get(__name__.split('.')[0])
 _IDENTITY = _MODULE.IDENTITY
 _LANGUAGE = _MODULE.LANGUAGE
-_LABELS = _LANGUAGE.LABELS()
+_LABELS = _LANGUAGE.LABELS({
+    "TOOLBAR_TITLE": "Feature Navigation Toolbar"})
 
 
 ################################################################################
@@ -16,7 +17,7 @@ class ToolBar:
     _GUID = _IDENTITY.PREFIX+_NAME.replace(" ", "")
 
     def __new__(cls, iface):
-        toolBar = iface.addToolBar(_LABELS(cls._NAME))
+        toolBar = iface.addToolBar(_LABELS.TOOLBAR_TITLE)
         toolBar.setObjectName(cls._GUID)
         return toolBar
 
