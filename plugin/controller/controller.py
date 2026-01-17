@@ -28,8 +28,10 @@ import random
 from qgis.core import *
 from qgis.PyQt.QtCore import *
 
-from .toolsetcontrollers import ResetController
+from .toolsetcontrollers import ItemsController
 from .toolsetcontrollers import IndexController
+from .selection import Selection
+
 from .dialog import ResetDialog
 
 ################################################################################
@@ -40,8 +42,8 @@ Controller is the main controller.
 It merely manages two subcontrollers that do the actual work.
 
 Controller
-    ResetController <-- responsible for reset button
-        ResetTools
+    ItemsController <-- responsible for items menu
+        ItemsMenu
     IndexController <-- responsible for index buttons
         IndexTools
 
@@ -65,18 +67,33 @@ class Controller(QObject):
     def __init__(self, iface, toolBar):
         super().__init__()
         self.setObjectName(self._GUID)
-
-        self._iface = iface
-        self._resetController = ResetController(iface, toolBar)
+        self._itemsController = ItemsController(iface, toolBar)
         self._indexController = IndexController(iface, toolBar)
-
-        self._resetController.setDelegate(self)
+        # Set IndexController as delegate for ItemsController signals
+        self._itemsController.setDelegate(self._indexController)
         self._indexController.didSelectFeature.connect(self.didSelectFeature)
 
+        self._selection = Selection(iface)
+        self._selection.changed.connect(self.selectionChanged)
+        self.updateActions()
+
+        self._iface = iface
         self._iface.setProperty(self._GUID, self)
 
     def __del__(self):
         self._iface.setProperty(self._GUID, None)
+
+
+    ########################################################################
+    ### Selection response
+    ########################################################################
+
+    def selectionChanged(self, layer):
+        self.updateActions()
+
+    def updateActions(self):
+        self._itemsController.updateActions()
+        self._indexController.updateActions()
 
     ########################################################################
     ### API
@@ -90,19 +107,6 @@ class Controller(QObject):
             if self._indexController.layer() == layer:
                 return self._indexController.selectNextFeature()
             layer.removeSelection()
-
-    ########################################################################
-    ### ResetController delegation
-    ########################################################################
-
-    def validateReset(self, layer):
-        enable = self._indexController.validateLayer(layer)
-        self._resetController.setEnabled(enable)
-
-    def resetClicked(self, layer):
-        if self._indexController.validateLayer(layer):
-            if self.confirmReset(layer):
-                self._indexController.setLayer(layer)
 
     ########################################################################
     '''

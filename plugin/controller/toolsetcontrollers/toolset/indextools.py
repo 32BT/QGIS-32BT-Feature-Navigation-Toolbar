@@ -5,7 +5,7 @@ from qgis.PyQt.QtWidgets import *
 from qgis.PyQt.QtGui import *
 
 from .toolset import ToolSet
-from .indexmenu import IndexMenu
+from .itemsmenu import ItemsMenu
 
 class Label(QLabel):
     def event(self, event):
@@ -63,7 +63,7 @@ class IndexTools(ToolSet):
         action.setText(self.LABEL.NAME)
         action.setObjectName(self.LABEL.GUID)
 
-        self._label._menu = IndexMenu(self._label)
+        #self._label._menu = ItemsMenu(self._label)
 
     ########################################################################
     ### Reset

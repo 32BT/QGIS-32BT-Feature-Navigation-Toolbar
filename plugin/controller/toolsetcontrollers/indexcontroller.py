@@ -1,20 +1,107 @@
 
 import math
 
+from qgis.core import *
 from qgis.PyQt.QtCore import *
 
 from .toolscontroller import ToolsController
 from .toolset import IndexTools
 from .engine import IndexItems
 
+################################################################################
+### ItemsMenu Definitions
+################################################################################
+
+from .toolset.itemsmenu import ItemsMenu as MENU
+
+################################################################################
+### IndexController
+################################################################################
 
 class IndexController(ToolsController):
     didSelectFeature = pyqtSignal(object)
 
     def __init__(self, iface, toolBar):
         super().__init__(iface, IndexTools(toolBar))
+        self._layerItems = None
+        self._indexItems = None
+        self._items = None
         self._tools.indexChanged.connect(self.selectItem)
-        self.updateActions()
+
+    ########################################################################
+    ### Delegate Actions
+    ########################################################################
+
+    def updateMenuAction(self, sender, action, idx):
+        if idx == MENU.BUTTON.INDEX:
+            enable = self.validateButton()
+            return action.setEnabled(enable)
+        if idx == MENU.ITEM.INDEX.LOAD_SELECTION:
+            enable = self.validateLoadSelection()
+            return action.setEnabled(enable)
+        if idx == MENU.ITEM.INDEX.SELECT_ALL:
+            enabled = self.validateSelectAll()
+            return action.setEnabled(enabled)
+        if idx == MENU.ITEM.INDEX.SELECT_REMAINING:
+            enabled = self.validateSelectAllRemaining()
+            return action.setEnabled(enabled)
+        if idx == MENU.ITEM.INDEX.SELECT_PAST:
+            enabled = self.validateSelectAllPast()
+            return action.setEnabled(enabled)
+
+    def handleMenuAction(self, sender, action, idx):
+        if idx == MENU.ITEM.INDEX.LOAD_SELECTION:
+            return self.loadSelection()
+        if idx == MENU.ITEM.INDEX.SELECT_ALL:
+            return self.selectAll()
+        if idx == MENU.ITEM.INDEX.SELECT_REMAINING:
+            return self.selectAllRemaining()
+        if idx == MENU.ITEM.INDEX.SELECT_PAST:
+            return self.selectAllPast()
+
+    ########################################################################
+    ### Slots
+    ########################################################################
+
+    def validateButton(self):
+        return (bool(self._layerItems) or
+        self.validateLoadSelection())
+
+    def validateLoadSelection(self):
+        layer = self._iface.activeLayer()
+        return self.validateLayer(layer)
+
+    def validateSelectAll(self):
+        return bool(self._indexItems) and len(self._indexItems) > 0
+
+    def validateSelectAllRemaining(self):
+        maxIndex = len(self._indexItems)-1 if self._indexItems else 0
+        return 0 < self._tools.index() < maxIndex
+
+    def validateSelectAllPast(self):
+        maxIndex = len(self._indexItems)-1 if self._indexItems else 0
+        return 0 < self._tools.index() < maxIndex
+
+    ########################################################################
+
+    def loadSelection(self):
+        layer = self._iface.activeLayer()
+        if self.validateLayer(layer):
+            self.setLayer(layer)
+
+    def selectAll(self):
+        layer = QgsProject.instance().mapLayer(self._layerID)
+        if layer: layer.selectByIds(list(self._indexItems))
+
+    def selectAllRemaining(self):
+        items = list(self._indexItems)[self._tools.index():]
+        layer = QgsProject.instance().mapLayer(self._layerID)
+        if layer: layer.selectByIds(items)
+
+    def selectAllPast(self):
+        items = list(self._indexItems)[:self._tools.index()]
+        layer = QgsProject.instance().mapLayer(self._layerID)
+        if layer: layer.selectByIds(items)
 
     ########################################################################
     ### Layer
@@ -32,14 +119,19 @@ class IndexController(ToolsController):
 
     def setLayer(self, layer):
         self._layer = layer
-        self._items = None
+        self._layerID = None
+        self._layerItems = None
+        self._indexItems = None
         self._tools.reset()
         if layer and layer.isValid():
             src = layer.selectedFeatureIds()
             if len(src) > 1:
-                self._items = IndexItems(src)
-                self._tools.reset(len(self._items)-1)
-                self.selectFeature(self._items[0])
+                self._layerID = layer.id()
+                self._layerItems = src
+                self._indexItems = IndexItems(src)
+                self._tools.reset(len(self._indexItems)-1)
+                self.selectFeature(self._indexItems[0])
+
 
     ########################################################################
     ### Actions
@@ -76,7 +168,7 @@ class IndexController(ToolsController):
     If selectFeature receives None, then it will deselect any selection.
     '''
     def selectItem(self, index=None):
-        fid = self._items.get(index)
+        fid = self._indexItems.get(index)
         self.selectFeature(fid)
 
 
@@ -121,18 +213,28 @@ class IndexController(ToolsController):
         idx = self._tools.index()
         # Select next idx if not locked
         if not self._tools.indexLocked():
-            idx = self._items.nextIndex(idx)
+            idx = self._indexItems.nextIndex(idx)
         return idx
 
     def parseSelectedFeatures(self):
-        cnt = len(self._items)
-        ids = self._layer.selectedFeatureIds()
-        self._items.parseItems(ids)
-        if len(self._items) > cnt:
+        if self._indexItems.parseItems(ids):
             # ids included new items, adjust indextools accordingly
-            self._tools.setMaxIndex(len(self._items)-1)
+            maxIndex = len(self._indexItems)-1
             idx = self._tools.index()
-            idx += len(self._items)-cnt
+            idx += maxIndex - self._tools.maxIndex()
+            self._tools.setMaxIndex(maxIndex)
+            self._tools.setIndex(idx)
+
+
+    def _parseSelectedFeatures(self):
+        cnt = len(self._indexItems)
+        ids = self._layer.selectedFeatureIds()
+        self._indexItems.parseItems(ids)
+        if len(self._indexItems) > cnt:
+            # ids included new items, adjust indextools accordingly
+            self._tools.setMaxIndex(len(self._indexItems)-1)
+            idx = self._tools.index()
+            idx += len(self._indexItems)-cnt
             self._tools.setIndex(idx)
 
     ########################################################################
@@ -144,16 +246,41 @@ class IndexController(ToolsController):
     def zoomToFeatureID(self, fid):
         f = self._layer.getFeature(fid)
         if f and f.isValid():
+            #mapCanvas = self._iface.mapCanvas()
+            #mapCanvas.panToFeatureIds([fid])
             self.zoomToFeature(f)
 
     def zoomToFeature(self, f):
         b = f.geometry().boundingBox()
-        if b.isEmpty(): b.grow(1.)
+        #if b.isEmpty(): b.grow(1.)
         self.zoomToExtent(b)
 
     def zoomToExtent(self, e):
+        mapCanvas = self._iface.mapCanvas()
+        s = 1.05 * self._scaleToFit(e)
+        n = s / self.ZOOM_STEP
+        s = math.ceil(n) * self.ZOOM_STEP
+        mapCanvas.zoomByFactor(s/mapCanvas.scale(), e.center())
+
+
+    def _scaleToFit(self, e):
+        mapCanvas = self._iface.mapCanvas()
+        s = mapCanvas.scale()
+        c = mapCanvas.extent()
+        sx = max(1, e.width()) / c.width()
+        sy = max(1, e.height()) / c.height()
+        return s * max(sx,sy)
+
+
+    '''
+    Following code creates two history extent entries, instead of one.
+    mapCanvas.freeze() makes no difference.
+
+    def zoomToExtent(self, e):
+        return self._zoomToExtent(e, self.ZOOM_STEP)
         mapCanvas = self._iface.mapCanvas()
         mapCanvas.zoomToFeatureExtent(e)
         n = mapCanvas.scale()/self.ZOOM_STEP
         s = math.ceil(n)*self.ZOOM_STEP
         mapCanvas.zoomScale(s)
+    '''
