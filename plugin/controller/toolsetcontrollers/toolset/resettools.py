@@ -44,6 +44,7 @@ class ResetTools(ToolSet):
 
     # Triggered by selectionChanged signal via ItemsController
     def updateActions(self):
+        print('goto delegate')
         # Allow delegate to solve the action validation
         self._menu.updateAction.emit(self, self._action, self._menu.BUTTON.INDEX)
 

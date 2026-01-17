@@ -1,8 +1,9 @@
 
-import math
+import random, math
 
 from qgis.core import *
 from qgis.PyQt.QtCore import *
+from qgis.PyQt.QtGui import *
 
 from .toolscontroller import ToolsController
 from .toolset import IndexTools
@@ -25,7 +26,6 @@ class IndexController(ToolsController):
         super().__init__(iface, IndexTools(toolBar))
         self._layerItems = None
         self._indexItems = None
-        self._items = None
         self._tools.indexChanged.connect(self.selectItem)
 
     ########################################################################
@@ -48,6 +48,13 @@ class IndexController(ToolsController):
         if idx == MENU.ITEM.INDEX.SELECT_PAST:
             enabled = self.validateSelectAllPast()
             return action.setEnabled(enabled)
+        if idx == MENU.ITEM.INDEX.RANDOM_SAMPLE:
+            enabled = self.validateRandomSample()
+            return action.setEnabled(enabled)
+
+        if idx == MENU.ITEM.INDEX.CLEAR_SAMPLE:
+            enabled = self.validateClearSample()
+            return action.setEnabled(enabled)
 
     def handleMenuAction(self, sender, action, idx):
         if idx == MENU.ITEM.INDEX.LOAD_SELECTION:
@@ -59,10 +66,17 @@ class IndexController(ToolsController):
         if idx == MENU.ITEM.INDEX.SELECT_PAST:
             return self.selectAllPast()
 
+        if idx == MENU.ITEM.INDEX.CLEAR_SAMPLE:
+            return self.clearSample()
+        if idx < MENU.ITEM.INDEX.CUSTOM:
+            return self.setSample(action.data())
     ########################################################################
     ### Slots
     ########################################################################
-
+    '''
+    self._layerItems are the ids of the original selection
+    self._indexItems are the ids actually loaded (which may be a random subset)
+    '''
     def validateButton(self):
         return (bool(self._layerItems) or
         self.validateLoadSelection())
@@ -82,6 +96,11 @@ class IndexController(ToolsController):
         maxIndex = len(self._indexItems)-1 if self._indexItems else 0
         return 0 < self._tools.index() < maxIndex
 
+    def validateRandomSample(self):
+        return bool(self._layerItems)
+
+    def validateClearSample(self):
+        return len(self._indexItems) < len(self._layerItems)
     ########################################################################
 
     def loadSelection(self):
@@ -103,6 +122,15 @@ class IndexController(ToolsController):
         layer = QgsProject.instance().mapLayer(self._layerID)
         if layer: layer.selectByIds(items)
 
+    def clearSample(self):
+        self.setIndexItems(self._layerItems)
+
+    def setSample(self, sampleSize):
+        sampleSize = (sampleSize * len(self._layerItems)+50)//100
+        if 2 <= sampleSize < len(self._layerItems):
+            A = self._layerItems
+            A = random.sample(A, k=sampleSize)
+            self.setIndexItems(A)
     ########################################################################
     ### Layer
     ########################################################################
@@ -128,10 +156,12 @@ class IndexController(ToolsController):
             if len(src) > 1:
                 self._layerID = layer.id()
                 self._layerItems = src
-                self._indexItems = IndexItems(src)
-                self._tools.reset(len(self._indexItems)-1)
-                self.selectFeature(self._indexItems[0])
+                self.setIndexItems(src)
 
+    def setIndexItems(self, itemList):
+        self._indexItems = IndexItems(itemList)
+        self._tools.reset(len(self._indexItems)-1)
+        self.selectFeature(self._indexItems[0])
 
     ########################################################################
     ### Actions
@@ -246,13 +276,10 @@ class IndexController(ToolsController):
     def zoomToFeatureID(self, fid):
         f = self._layer.getFeature(fid)
         if f and f.isValid():
-            #mapCanvas = self._iface.mapCanvas()
-            #mapCanvas.panToFeatureIds([fid])
             self.zoomToFeature(f)
 
     def zoomToFeature(self, f):
         b = f.geometry().boundingBox()
-        #if b.isEmpty(): b.grow(1.)
         self.zoomToExtent(b)
 
     def zoomToExtent(self, e):

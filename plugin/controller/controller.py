@@ -69,26 +69,30 @@ class Controller(QObject):
         self.setObjectName(self._GUID)
         self._itemsController = ItemsController(iface, toolBar)
         self._indexController = IndexController(iface, toolBar)
+
         # Set IndexController as delegate for ItemsController signals
         self._itemsController.setDelegate(self._indexController)
         self._indexController.didSelectFeature.connect(self.didSelectFeature)
 
+        # React to selection changes and sync state
         self._selection = Selection(iface)
         self._selection.changed.connect(self.selectionChanged)
         self.updateActions()
 
+        # Make controller available to other plugins
         self._iface = iface
         self._iface.setProperty(self._GUID, self)
 
     def __del__(self):
         self._iface.setProperty(self._GUID, None)
 
-
     ########################################################################
     ### Selection response
     ########################################################################
 
     def selectionChanged(self, layer):
+        self._itemsController.selectionChanged(layer)
+        self._indexController.selectionChanged(layer)
         self.updateActions()
 
     def updateActions(self):
@@ -109,20 +113,4 @@ class Controller(QObject):
             layer.removeSelection()
 
     ########################################################################
-    '''
-    Resetting the current session is potentially prohibitive. The user may have
-    had an elaborate selection set for browsing. Recreating the selection may
-    be expensive. We therefore want to double check a reset.
 
-    TODO some scenarios might even require a disabled/locked reset button?
-    '''
-    def confirmReset(self, layer):
-        parent = self._iface.mainWindow()
-        sample = ResetDialog(parent).confirmReset(layer)
-        if sample is not None:
-            if 2 <= sample < layer.selectedFeatureCount():
-                A = layer.selectedFeatureIds()
-                A = random.sample(A, k=sample)
-                layer.selectByIds(A)
-            return True
-        return False

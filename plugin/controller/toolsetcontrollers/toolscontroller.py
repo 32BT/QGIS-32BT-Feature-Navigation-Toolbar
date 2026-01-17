@@ -2,8 +2,6 @@
 from qgis.PyQt.QtCore import *
 from .layercontroller import LayerController
 
-from .qgs import Selection
-
 ################################################################################
 ### ToolsController
 ################################################################################
@@ -23,9 +21,6 @@ class ToolsController(LayerController):
         super().__init__(iface)
         self._tools = toolSet
         self._tools.actionTriggered.connect(self.toolsActionTriggered)
-
-        self._selection = Selection(iface)
-        self._selection.changed.connect(self.selectionChanged)
 
     ########################################################################
     '''
