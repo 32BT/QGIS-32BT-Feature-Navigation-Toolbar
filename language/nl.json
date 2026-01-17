@@ -36,5 +36,27 @@
     "First": "Eerste",
     "Previous": "Vorige",
     "Next": "Volgende",
-    "Last": "Laatste"
+    "Last": "Laatste",
+
+
+    "INDEXMENU_TITLE":
+    "Selectiemenu",
+    "INDEXMENU_ITEM1":
+    "Selectie laden",
+    "INDEXMENU_ITEM2":
+    "Selecteer Alle Items",
+    "INDEXMENU_ITEM3":
+    "Selecteer Alle Resterende Items",
+    "INDEXMENU_ITEM4":
+    "Selecteer Alle Voorgaande Items",
+
+    "SAMPLEMENU_TITLE":
+    "Steekproef",
+    "SAMPLEMENU_ITEM1":
+    "Verwijderen",
+    "SAMPLEMENU_ITEM2":
+    "Aangepast...",
+
+    "Sample": "Steekproef"
+
 }

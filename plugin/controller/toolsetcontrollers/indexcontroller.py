@@ -70,6 +70,7 @@ class IndexController(ToolsController):
             return self.clearSample()
         if idx < MENU.ITEM.INDEX.CUSTOM:
             return self.setSample(action.data())
+
     ########################################################################
     ### Slots
     ########################################################################
@@ -101,6 +102,7 @@ class IndexController(ToolsController):
 
     def validateClearSample(self):
         return len(self._indexItems) < len(self._layerItems)
+
     ########################################################################
 
     def loadSelection(self):
@@ -131,6 +133,7 @@ class IndexController(ToolsController):
             A = self._layerItems
             A = random.sample(A, k=sampleSize)
             self.setIndexItems(A)
+
     ########################################################################
     ### Layer
     ########################################################################
@@ -167,6 +170,21 @@ class IndexController(ToolsController):
     ### Actions
     ########################################################################
     '''
+    If current index is not in the currently selected features, then a single
+    step navigation attempt should first move to the current index, not to
+    the next index. Setting the lock, grays out the indexlabel and ensures
+    we start again at current index.
+    '''
+    def updateActions(self):
+        layer = self._layer
+        if layer:
+            idx = self._tools.index()
+            fid = self._indexItems.get(idx)
+            lock = fid not in layer.selectedFeatureIds()
+            self._tools.setIndexLocked(lock)
+        super().updateActions()
+
+    '''
     The indextoolset emits an indexChanged signal whenever its index changes.
     The feature selected in self._layer should change accordingly.
     '''
@@ -174,16 +192,10 @@ class IndexController(ToolsController):
         self.selectItem(index)
 
     '''
-    If no features are selected, then a single step navigation attempt should
-    first move to the current index, not to the next index.
-    If IndexTools does not update index due to the lock, then HandleToolsAction
-    will be called instead. This will select the current item.
+    If index was locked (because the corresponding feature was not in the
+    current selection), then instead of an indexChanged signal, we get
+    a toolbutton signal.
     '''
-    def selectedFeaturesChanged(self, layer):
-        if self._layer==layer and layer:
-            lock = layer.selectedFeatureCount()==0
-            self._tools.setIndexLocked(lock)
-
     def handleToolsAction(self, action):
         if self._tools.indexLocked():
             index = self._tools.index()
@@ -213,7 +225,7 @@ class IndexController(ToolsController):
         self.didSelectFeature.emit(fid)
 
     '''
-    For userconvenience other tools are allowed to move the navigation forward.
+    For userconvenience, other tools are allowed to move the navigation forward.
     The labelcontroller for example will label the currently selected features.
     These features should become part of the history and the next available
     unprocessed item should then be selected.
@@ -238,6 +250,7 @@ class IndexController(ToolsController):
                 # update buttons and emit indexChanged
                 self._tools.setIndex(idx)
 
+
     def getNextIndex(self):
         # Get current tool-index
         idx = self._tools.index()
@@ -245,6 +258,7 @@ class IndexController(ToolsController):
         if not self._tools.indexLocked():
             idx = self._indexItems.nextIndex(idx)
         return idx
+
 
     def parseSelectedFeatures(self):
         if self._indexItems.parseItems(ids):

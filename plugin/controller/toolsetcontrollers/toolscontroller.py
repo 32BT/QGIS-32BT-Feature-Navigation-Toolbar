@@ -27,16 +27,9 @@ class ToolsController(LayerController):
     The Selection class will trigger a selectionChanged signal when:
         1. The active layer in the ToC changes
         2. The selection of features on the active layer changes
-    We divert this call to selectedFeaturesChanged so a subclass does not
-    need to call super.
     '''
     def selectionChanged(self, layer):
-        if layer:
-            self.selectedFeaturesChanged(layer)
         self.updateActions()
-
-    def selectedFeaturesChanged(self, layer):
-        pass
 
     ########################################################################
 
