@@ -1,2 +1,2 @@
 
-from .reset import Dialog as ResetDialog
+from .sampledialog import Dialog as SampleDialog

@@ -39,7 +39,7 @@ _LABELS = _MODULE.LANGUAGE.LABELS({
 
 class SampleBox(QWidget, _form()):
 
-    def __init__(self, maxSize=2):
+    def __init__(self, size, maxSize=0):
         super().__init__()
         self.setupUi(self)
 
@@ -53,11 +53,12 @@ class SampleBox(QWidget, _form()):
 
         self.sampleCombo.currentTextChanged.connect(self.sampleComboChanged)
         self.sampleCombo.lineEdit().editingFinished.connect(self.sampleComboFinished)
-        self.sampleCount.textEdited.connect(self.sampleCountChanged)
+        self.sampleCount.textEdited.connect(self.sampleCountEdited)
         self.sampleCount.editingFinished.connect(self.sampleCountFinished)
 
-        self.maxSize = maxSize
-        self.setSize(maxSize)
+        self.maxSize = maxSize or size
+        self.setSize(size or maxSize)
+        self.sampleCountEdited()
 
     ########################################################################
     ### Signalhandlers
@@ -69,7 +70,7 @@ class SampleBox(QWidget, _form()):
     def sampleComboFinished(self):
         self.setPercentage(self.getPercentage())
 
-    def sampleCountChanged(self):
+    def sampleCountEdited(self):
         self.controlChanged(self.sampleCount)
 
     def sampleCountFinished(self):

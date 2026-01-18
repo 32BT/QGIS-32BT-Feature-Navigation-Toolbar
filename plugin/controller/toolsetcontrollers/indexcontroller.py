@@ -8,7 +8,7 @@ from qgis.PyQt.QtGui import *
 from .toolscontroller import ToolsController
 from .toolset import IndexTools
 from .engine import IndexItems
-
+from ..dialog import SampleDialog
 ################################################################################
 ### ItemsMenu Definitions
 ################################################################################
@@ -55,6 +55,9 @@ class IndexController(ToolsController):
         if idx == MENU.ITEM.INDEX.CLEAR_SAMPLE:
             enabled = self.validateClearSample()
             return action.setEnabled(enabled)
+        if idx == MENU.ITEM.INDEX.CUSTOM_SAMPLE:
+            enabled = True
+            return action.setEnabled(enabled)
 
     def handleMenuAction(self, sender, action, idx):
         if idx == MENU.ITEM.INDEX.LOAD_SELECTION:
@@ -68,8 +71,11 @@ class IndexController(ToolsController):
 
         if idx == MENU.ITEM.INDEX.CLEAR_SAMPLE:
             return self.clearSample()
-        if idx < MENU.ITEM.INDEX.CUSTOM:
+        if idx < MENU.ITEM.INDEX.CUSTOM_SAMPLE:
             return self.setSample(action.data())
+        if idx == MENU.ITEM.INDEX.CUSTOM_SAMPLE:
+            if self.askSample():
+                sender.setDefaultSampleAction(action)
 
     ########################################################################
     ### Slots
@@ -127,12 +133,26 @@ class IndexController(ToolsController):
     def clearSample(self):
         self.setIndexItems(self._layerItems)
 
-    def setSample(self, sampleSize):
-        sampleSize = (sampleSize * len(self._layerItems)+50)//100
+    def setSample(self, sampleRatio=100, sampleSize=None):
+        if sampleSize is None:
+            sampleSize = (sampleRatio * len(self._layerItems)+50)//100
         if 2 <= sampleSize < len(self._layerItems):
-            A = self._layerItems
-            A = random.sample(A, k=sampleSize)
-            self.setIndexItems(A)
+            if sampleSize != len(self._indexItems):
+                A = self._layerItems
+                A = random.sample(A, k=sampleSize)
+                self.setIndexItems(A)
+
+    def askSample(self):
+        parent = self._iface.mainWindow()
+        size = len(self._indexItems)
+        maxSize = len(self._layerItems)
+        layerName = self._layer.name()
+        size = SampleDialog(parent).askInput(size, maxSize, layerName)
+        if size and 2 <= size < maxSize:
+            self.setSample(sampleSize=size)
+            return True
+        return False
+
 
     ########################################################################
     ### Layer

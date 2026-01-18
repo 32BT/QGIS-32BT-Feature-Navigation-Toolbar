@@ -20,14 +20,18 @@ class ResetTools(ToolSet):
         So we just build a full actionchain ourselves.
         '''
         self._menu = ItemsMenu()
+        self._menu.setObjectName("SelectionMenu")
         self._menu.aboutToHide.connect(self.menuDidFinish)
 
         self._action = QAction()
+        self._action.setObjectName("SelectionMenuAction")
         self._action.setIcon(self._load_icon(iconName))
+        self._action.setText(self._menu.title())
         self._action.triggered.connect(self.showMenu)
         self._actions.append(self._action)
 
         self._button = QToolButton()
+        self._button.setObjectName("SelectionMenuToolButton")
         self._button.setDefaultAction(self._action)
         toolBar.addWidget(self._button)
 
@@ -45,7 +49,7 @@ class ResetTools(ToolSet):
     '''
     updateActions is triggered by selectionChanged signal via ToolsController.
     It allows a ToolSet controller to determine the availability of its buttons.
-    This controller manages one button only, the ItemsMenu button.
+    This controller manages one button only, the SelectionMenu button.
     '''
     def updateActions(self):
         # Allow delegate to solve the button validation

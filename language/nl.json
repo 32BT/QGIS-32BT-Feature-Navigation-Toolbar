@@ -3,34 +3,18 @@
     "Werkbalk Objectnavigatie",
 
     "TOOLBAR_ITEM1":
-    "Eerste",
-
+        "Eerste",
     "TOOLBAR_ITEM2":
-    "Vorige",
-
+        "Vorige",
     "TOOLBAR_ITEM3":
-    "Volgende",
-
+        "Volgende",
     "TOOLBAR_ITEM4":
-    "Laatste",
+        "Laatste",
 
     "RESETDIALOG_TITLE":
-    "Bevestig Selectie",
-
+        "Bevestig Selectie",
     "RESETDIALOG_LABEL":
-    "Er zijn {} objecten geselecteerd voor navigatie in de laag '{}'.",
-
-    "SAMPLEBOX_TITLE":
-    "Steekproef",
-
-    "SAMPLEBOX_LABEL":
-    "Vul hieronder de gewenste steekproefgrootte in.",
-
-    "SAMPLEBOX_SIZELABEL":
-    "Steekproefpercentage:",
-
-    "SAMPLEBOX_COUNTLABEL":
-    "Aantal:",
+        "Er zijn {} objecten geselecteerd voor navigatie in de laag '{}'.",
 
     "Feature Navigation Toolbar": "Werkbalk Objectnavigatie",
     "First": "Eerste",
@@ -38,25 +22,38 @@
     "Next": "Volgende",
     "Last": "Laatste",
 
-
     "INDEXMENU_TITLE":
-    "Selectiemenu",
+        "Selectiemenu",
     "INDEXMENU_ITEM1":
-    "Selectie laden",
+        "Selectie laden",
     "INDEXMENU_ITEM2":
-    "Selecteer Alle Items",
+        "Selecteer Alle Items",
     "INDEXMENU_ITEM3":
-    "Selecteer Alle Resterende Items",
+        "Selecteer Alle Resterende Items",
     "INDEXMENU_ITEM4":
-    "Selecteer Alle Voorgaande Items",
+        "Selecteer Alle Voorgaande Items",
 
     "SAMPLEMENU_TITLE":
-    "Steekproef",
+        "Steekproef",
     "SAMPLEMENU_ITEM1":
-    "Verwijderen",
+        "Wissen",
     "SAMPLEMENU_ITEM2":
-    "Aangepast...",
+        "Aangepast...",
 
-    "Sample": "Steekproef"
+    "Sample": "Steekproef",
+
+    "SAMPLEDIALOG_TITLE":
+        "Aangepaste Steekproef",
+    "SAMPLEDIALOG_LABEL":
+        "De volledige set bevat {} features uit laag '{}'.",
+
+    "SAMPLEBOX_TITLE":
+        "Steekproef",
+    "SAMPLEBOX_LABEL":
+        "Vul hieronder de gewenste steekproefgrootte in.",
+    "SAMPLEBOX_SIZELABEL":
+        "Steekproefpercentage:",
+    "SAMPLEBOX_COUNTLABEL":
+        "Aantal:"
 
 }

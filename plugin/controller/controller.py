@@ -23,16 +23,12 @@ class ToolBar:
 
 ################################################################################
 
-import random
-
 from qgis.core import *
 from qgis.PyQt.QtCore import *
 
 from .toolsetcontrollers import ItemsController
 from .toolsetcontrollers import IndexController
 from .selection import Selection
-
-from .dialog import ResetDialog
 
 ################################################################################
 ### NavigationController
