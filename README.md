@@ -1,16 +1,17 @@
-# QGIS-Feature-Navigation-Toolbar
+# QGIS-32BT-Feature-Navigation-Toolbar
 QGIS plugin for a toolbar to easily navigate a preselected set of features from any featurelayer.
 
 <img width="223" height="41" alt="image" src="https://github.com/user-attachments/assets/693cb433-94ed-4846-9b3c-0212959d7586" />  
 
 ### Feature Navigation Toolbar  
 **Overview**  
-The Feature Navigation Toolbar is meant to quickly browse a prior selection of features. It will select and zoom to each successive feature. It is not much different from the tablebrowser, except that it will also autoselect the current feature. In addition, it has an internal memory which allows it to provide two important extra functions. It can append additional features outside the preselected set, and it will remember and separate between parsed and unparsed features.
+The Feature Navigation Toolbar is meant to quickly browse a prior selection of features. It will select and zoom to each successive feature. It is not much different from the tablebrowser, except that it will also autoselect the current feature. In addition, it has an internal memory which allows it to provide some useful extra functions. It can create samplesets on-the-fly, or reselect the original set. It can also append additional features outside the preselected set, and it will remember and separate between parsed and unparsed features.
 
-Because the browser distinguishes between parsed and unparsed features it can change its browsing behavior so that unparsed features are prioritized. Sometimes you want to browse back a couple of steps and redo a feature and then recommence where you left off in the unparsed set.
+Because the browser distinguishes between parsed and unparsed features it can change its browsing behavior so that unparsed features are prioritized. This is especially useful in conjunction with other processing, like labeling features, where you sometimes want to browse back a couple of steps and redo a feature and then recommence where you left off in the unparsed set.
 
 **Installation**  
-You can download a zipfile of the code repository using the Code-button available on this repository's github page. Decompress the zipfile into your QGIS plugins directory. The plugin management dialog can do this for you using the "Install from ZIP" option. See: https://docs.qgis.org/3.40/nl/docs/user_manual/plugins/plugins.html#the-install-from-zip-tab  
+Use the plugin manager to install the plugin. Alternatively, you can download a zipfile of the code repository using the Code-button available on this repository's github page. In that case, decompress the zipfile into your QGIS plugins directory, or use the plugin management dialog's "Install from ZIP" option. See: https://docs.qgis.org/3.40/nl/docs/user_manual/plugins/plugins.html#the-install-from-zip-tab  
+
 In the plugin management dialog, make sure the plugin is activated.
 
 <img width="1075" height="432" alt="image" src="https://github.com/user-attachments/assets/b738591a-76dc-4dab-ad55-6eae993ff828" /><br/>
