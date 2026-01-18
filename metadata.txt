@@ -11,8 +11,7 @@ homepage=https://github.com/32BT/QGIS-32BT-Feature-Navigation-Toolbar
 repository=https://github.com/32BT/QGIS-32BT-Feature-Navigation-Toolbar
 tracker=https://github.com/32BT/QGIS-32BT-Feature-Navigation-Toolbar/issues
 changelog=Version 1.2
-    All new selectionmenu to load and manipulate the items used for navigation.
-    Adds options to select from the original selectionset; all items, all remaining items, or all preceding items, or a resettable random sample.
+    All new selectionmenu to load and manipulate the items used for navigation. Adds options to select from the original selectionset; all items, all remaining items, all preceding items, or a resettable random sample.
 
     Version 1.1
     Added option for a random sampleset when starting a new session
