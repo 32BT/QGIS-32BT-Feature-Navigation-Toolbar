@@ -45,8 +45,8 @@ class IndexController(ToolsController):
         if idx == MENU.ITEM.INDEX.SELECT_REMAINING:
             enabled = self.validateSelectAllRemaining()
             return action.setEnabled(enabled)
-        if idx == MENU.ITEM.INDEX.SELECT_PAST:
-            enabled = self.validateSelectAllPast()
+        if idx == MENU.ITEM.INDEX.SELECT_PRECEDING:
+            enabled = self.validateSelectAllPreceding()
             return action.setEnabled(enabled)
         if idx == MENU.ITEM.INDEX.RANDOM_SAMPLE:
             enabled = self.validateRandomSample()
@@ -66,8 +66,8 @@ class IndexController(ToolsController):
             return self.selectAll()
         if idx == MENU.ITEM.INDEX.SELECT_REMAINING:
             return self.selectAllRemaining()
-        if idx == MENU.ITEM.INDEX.SELECT_PAST:
-            return self.selectAllPast()
+        if idx == MENU.ITEM.INDEX.SELECT_PRECEDING:
+            return self.selectAllPreceding()
 
         if idx == MENU.ITEM.INDEX.CLEAR_SAMPLE:
             return self.clearSample()
@@ -99,7 +99,7 @@ class IndexController(ToolsController):
         maxIndex = len(self._indexItems)-1 if self._indexItems else 0
         return 0 < self._tools.index() < maxIndex
 
-    def validateSelectAllPast(self):
+    def validateSelectAllPreceding(self):
         maxIndex = len(self._indexItems)-1 if self._indexItems else 0
         return 0 < self._tools.index() < maxIndex
 
@@ -125,7 +125,7 @@ class IndexController(ToolsController):
         layer = QgsProject.instance().mapLayer(self._layerID)
         if layer: layer.selectByIds(items)
 
-    def selectAllPast(self):
+    def selectAllPreceding(self):
         items = list(self._indexItems)[:self._tools.index()]
         layer = QgsProject.instance().mapLayer(self._layerID)
         if layer: layer.selectByIds(items)
@@ -152,7 +152,6 @@ class IndexController(ToolsController):
             self.setSample(sampleSize=size)
             return True
         return False
-
 
     ########################################################################
     ### Layer

@@ -36,6 +36,14 @@ class ResetTools(ToolSet):
         toolBar.addWidget(self._button)
 
     ########################################################################
+    '''
+    updateActions is triggered by selectionChanged signal via ToolsController.
+    It allows a ToolSet controller to determine the availability of its buttons.
+    This controller manages one button only, the SelectionMenu button.
+    '''
+    def updateActions(self):
+        # Allow delegate to solve the button validation
+        self._menu.updateAction.emit(self, self._action, self._menu.BUTTON.INDEX)
 
     def getMenu(self):
         return self._menu
@@ -45,15 +53,6 @@ class ResetTools(ToolSet):
 
     def getButton(self):
         return self._button
-
-    '''
-    updateActions is triggered by selectionChanged signal via ToolsController.
-    It allows a ToolSet controller to determine the availability of its buttons.
-    This controller manages one button only, the SelectionMenu button.
-    '''
-    def updateActions(self):
-        # Allow delegate to solve the button validation
-        self._menu.updateAction.emit(self, self._action, self._menu.BUTTON.INDEX)
 
     ########################################################################
 

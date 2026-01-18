@@ -85,10 +85,12 @@ class Controller(QObject):
     ########################################################################
     ### Selection response
     ########################################################################
-
+    '''
+    The Selection class will trigger a selectionChanged signal when:
+        1. The active layer in the ToC changes
+        2. The selection of features on the active layer changes
+    '''
     def selectionChanged(self, layer):
-        self._itemsController.selectionChanged(layer)
-        self._indexController.selectionChanged(layer)
         self.updateActions()
 
     def updateActions(self):

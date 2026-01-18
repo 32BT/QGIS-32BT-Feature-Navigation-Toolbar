@@ -8,8 +8,7 @@ from .layercontroller import LayerController
 '''
 ToolsController is a LayerController with a toolset.
 It's the baseclass for controlling a toolset with the plumbing to update
-the tools as necessary. It responds to layerselection changes and allows
-toolsets to update accordingly.
+the tools as necessary.
 
 Both the ResetController and IndexController are based on this class.
 '''
@@ -21,15 +20,6 @@ class ToolsController(LayerController):
         super().__init__(iface)
         self._tools = toolSet
         self._tools.actionTriggered.connect(self.toolsActionTriggered)
-
-    ########################################################################
-    '''
-    The Selection class will trigger a selectionChanged signal when:
-        1. The active layer in the ToC changes
-        2. The selection of features on the active layer changes
-    '''
-    def selectionChanged(self, layer):
-        self.updateActions()
 
     ########################################################################
 
