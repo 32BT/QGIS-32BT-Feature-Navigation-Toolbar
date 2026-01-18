@@ -14,20 +14,21 @@ Use the plugin manager to install the plugin. Alternatively, you can download a 
 
 In the plugin management dialog, make sure the plugin is activated.
 
-<img width="1075" height="432" alt="image" src="https://github.com/user-attachments/assets/b738591a-76dc-4dab-ad55-6eae993ff828" /><br/>
+<img width="1043" height="488" alt="image" src="https://github.com/user-attachments/assets/07500a0c-4f71-4075-9485-9159576d60fb" /><br/>
 
 **Start Navigation**  
 The resetbutton at the left of the toolbar allows you to start a navigation session.  
 
 <img width="215" height="41" alt="image" src="https://github.com/user-attachments/assets/9fec5ca8-6289-4fd6-81fb-24dfe9a53858" /><br/>  
 
-The button will be available if the active layer in the map legend is a feature layer with at least two or more features selected. If only one feature is selected, the start-button will not be available. This is generally the case during navigation and prevents accidentally hitting the restart-button.
+Initially, the button will only become available if the active layer in the map legend is a feature layer with at least two or more features selected. If you click the button, a menu will appear. In the menu you can choose "Load Selection" to load the current layer selection into the navigator, which in turn will immediately jump to the first feature. The feature will be selected and the view will be zoomed appropriately.
 
-After clicking the resetbutton, a dialogbox will appear that shows the name of the targetlayer and the number of features selected. The dialogbox allows you to verify the reset action. If you inadvertently selected the resetbutton, or you decide to stick with a current browsing session instead, you can simply select cancel. 
+<img width="244" height="181" alt="image" src="https://github.com/user-attachments/assets/8cbf8879-f955-4a04-8b8a-f63aad26468c" /><br/>
 
-<img width="497" height="247" alt="image" src="https://github.com/user-attachments/assets/220a9aee-c4d4-45ea-825f-612d27c1313c" />
+The toolbar should now show an info label with the currently selected item and the total number of items. You can now use the navigation buttons to traverse the set of features.  
 
-If the reset is validated, the selection will be loaded and the tool will immediately jump to the first feature. The feature will be selected and the view will be zoomed appropriately. Use the navigation buttons to traverse the set of features.  
+<img width="216" height="42" alt="image" src="https://github.com/user-attachments/assets/972ca835-1bb6-4d2c-9ab0-a00065359503" /><br/>
+
 
 **Random sample**  
 In order to judge the overall quality of a large set of features, it may be useful to sample a random subset of those features. The reset dialog allows you to quickly generate a subset sample of the initial selectionset. Activate the Random sample checkbox, and enter a samplesize by simply selecting or typing a percentage, or entering a specific count. After clicking OK, the plugin will randomly select features from the original selection. 
