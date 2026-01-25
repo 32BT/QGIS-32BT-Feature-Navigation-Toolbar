@@ -136,7 +136,8 @@ class IndexController(ToolsController):
     def setSample(self, sampleRatio=100, sampleSize=None):
         if sampleSize is None:
             sampleSize = (sampleRatio * len(self._layerItems)+50)//100
-        if 2 <= sampleSize < len(self._layerItems):
+        sampleSize = max(2, sampleSize)
+        if sampleSize < len(self._layerItems):
             if sampleSize != len(self._indexItems):
                 A = self._layerItems
                 A = random.sample(A, k=sampleSize)
