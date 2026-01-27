@@ -1,3 +1,3 @@
 
-from .resetcontroller import ResetController
+from .itemscontroller import ItemsController
 from .indexcontroller import IndexController

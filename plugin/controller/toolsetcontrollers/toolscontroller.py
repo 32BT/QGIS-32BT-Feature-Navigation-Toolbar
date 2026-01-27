@@ -2,16 +2,13 @@
 from qgis.PyQt.QtCore import *
 from .layercontroller import LayerController
 
-from .qgs import Selection
-
 ################################################################################
 ### ToolsController
 ################################################################################
 '''
 ToolsController is a LayerController with a toolset.
 It's the baseclass for controlling a toolset with the plumbing to update
-the tools as necessary. It responds to layerselection changes and allows
-toolsets to update accordingly.
+the tools as necessary.
 
 Both the ResetController and IndexController are based on this class.
 '''
@@ -23,25 +20,6 @@ class ToolsController(LayerController):
         super().__init__(iface)
         self._tools = toolSet
         self._tools.actionTriggered.connect(self.toolsActionTriggered)
-
-        self._selection = Selection(iface)
-        self._selection.changed.connect(self.selectionChanged)
-
-    ########################################################################
-    '''
-    The Selection class will trigger a selectionChanged signal when:
-        1. The active layer in the ToC changes
-        2. The selection of features on the active layer changes
-    We divert this call to selectedFeaturesChanged so a subclass does not
-    need to call super.
-    '''
-    def selectionChanged(self, layer):
-        if layer:
-            self.selectedFeaturesChanged(layer)
-        self.updateActions()
-
-    def selectedFeaturesChanged(self, layer):
-        pass
 
     ########################################################################
 

@@ -9,6 +9,12 @@ class IndexItems:
         self._pastItems = []
         self._nextItems = list(items)
 
+    def pastItems(self):
+        return self._pastItems
+
+    def nextItems(self):
+        return self._nextItems
+
     def __len__(self):
         return len(self._pastItems)+len(self._nextItems)
 
@@ -51,12 +57,11 @@ class IndexItems:
         return None
 
     def parseItems(self, items):
-        for item in items:
-            self.parseItem(item)
+        return sum(self.parseItem(item) for item in items)
 
     def parseItem(self, item):
         if item not in self._pastItems:
             self._pastItems.append(item)
-            if item in self._nextItems:
-                self._nextItems.remove(item)
-
+            if item not in self._nextItems: return True
+            self._nextItems.remove(item)
+        return False

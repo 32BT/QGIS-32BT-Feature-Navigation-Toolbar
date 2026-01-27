@@ -51,20 +51,21 @@ class ToolSet(QObject):
         if proc: action.triggered.connect(proc)
         return action
 
-
-    def _load_icon(self, path):
+    @classmethod
+    def _load_icon(cls, path):
         if os.path.exists(path):
             icon = QIcon(os.path.relpath(path))
         else:
             name = os.path.split(path)[-1]
-            name = self._icon_name(name)
-            path = self._icon_path(name)
+            name = cls._icon_name(name)
+            path = cls._icon_path(name)
             icon = QIcon(os.path.relpath(path))
         if icon.isNull():
             icon = QgsApplication.getThemeIcon(name)
         return icon
 
-    def _icon_name(self, name):
+    @classmethod
+    def _icon_name(cls, name):
         name = name.replace(' ','')
         if not name.startswith('mAction'):
             name = 'mAction'+name
@@ -72,7 +73,8 @@ class ToolSet(QObject):
         if not ext: ext = '.svg'
         return name+ext
 
-    def _icon_path(self, name):
+    @classmethod
+    def _icon_path(cls, name):
         path = __file__
         path = os.path.split(path)[0]
         path = os.path.join(path, "icons")

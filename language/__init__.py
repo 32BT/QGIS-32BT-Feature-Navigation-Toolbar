@@ -31,10 +31,7 @@ class LABELS(dict):
         return self.get(k)
 
     def get(self, k):
-        v = super().get(k)
-        if isinstance(v, list):
-            v = '\n'.join(v)
-        return v or k or ""
+        return super().get(k) or k or ""
 
     @classmethod
     def loadLanguage(cls, lang=None):

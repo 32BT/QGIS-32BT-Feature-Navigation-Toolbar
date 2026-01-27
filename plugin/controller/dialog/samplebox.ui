@@ -56,11 +56,9 @@
           <property name="editable">
            <bool>true</bool>
           </property>
-          <item>
-           <property name="text">
-            <string>100%</string>
-           </property>
-          </item>
+          <property name="minimumContentsLength">
+           <number>4</number>
+          </property>
           <item>
            <property name="text">
             <string>50%</string>
