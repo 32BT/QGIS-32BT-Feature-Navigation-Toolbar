@@ -48,7 +48,7 @@ class SampleBox(QWidget, _form()):
         self.sampleCountLabel.setText(_LABELS.SAMPLEBOX_COUNTLABEL)
         validator = self.IntValidator(1, 100, "%")
         self.sampleCombo.lineEdit().setValidator(validator)
-        self.sampleCombo.lineEdit().setAlignment(Qt.AlignRight)
+        self.sampleCombo.lineEdit().setAlignment(Qt.AlignmentFlag.AlignRight)
         self.sampleCount.setValidator(self.IntValidator())
 
         self.sampleCombo.currentTextChanged.connect(self.sampleComboChanged)
