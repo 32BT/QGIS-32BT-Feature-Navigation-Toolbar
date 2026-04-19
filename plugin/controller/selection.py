@@ -1,4 +1,5 @@
 
+
 from qgis.PyQt.QtCore import *
 
 ################################################################################
@@ -12,12 +13,14 @@ not emit any signal.
 
 So, we need to implement an alternative...
 
-The Selection class will watch for layer changed signals, and will also watch
-for selection changed signals on the active layer using the Layer class.
+The Selection class will watch for active layer changes, and will also watch
+for selection changes on the active layer, regardless of visibility.
 
 The selection.changed signal will emit when:
-- the layerselection changes, or
-- the featureselection changes (on the active layer, regardless of visibility).
+- the active layer is switched, or
+- the featureselection changes, or
+- the active layer changes editing state.
+
 The layer property may be None.
 '''
 
@@ -38,20 +41,24 @@ class Selection(QObject):
         self._layer = None
         if hasattr(layer, 'selectionChanged'):
             self._layer = Layer(layer)
-            self._layer.selectedFeaturesChanged.connect(self.changed)
+            self._layer.stateChanged.connect(self.changed)
         self.changed.emit(layer)
 
 ################################################################################
+'''
+'''
 
 class Layer(QObject):
-    selectedFeaturesChanged = pyqtSignal(object)
+    stateChanged = pyqtSignal(object)
 
     def __init__(self, layer):
         super().__init__()
         self._layer = layer
-        self._layer.selectionChanged.connect(self.selectionChanged)
+        self._layer.selectionChanged.connect(self._stateChanged)
+        self._layer.editingStarted.connect(self._stateChanged)
+        self._layer.editingStopped.connect(self._stateChanged)
 
-    def selectionChanged(self, *args):
-        self.selectedFeaturesChanged.emit(self._layer)
+    def _stateChanged(self, *args):
+        self.stateChanged.emit(self._layer)
 
 ################################################################################
