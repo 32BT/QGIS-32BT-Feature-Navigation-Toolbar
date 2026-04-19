@@ -176,6 +176,7 @@ class IndexController(ToolsController):
         self._tools.reset()
         if layer and layer.isValid():
             src = layer.selectedFeatureIds()
+            src = list(sorted(src))
             if len(src) > 1:
                 self._layerID = layer.id()
                 self._layerItems = src
