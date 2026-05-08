@@ -12,10 +12,15 @@ repository=https://github.com/32BT/QGIS-32BT-Feature-Navigation-Toolbar
 tracker=https://github.com/32BT/QGIS-32BT-Feature-Navigation-Toolbar/issues
 
 qgisMinimumVersion=3.0
-qgisMaximumVersion=5.0
+qgisMaximumVersion=4.99
 
-version=1.3
-changelog=Version 1.3
+version=1.4
+changelog=Version 1.4
+    Initial sorted list
+    Updated selection signals
+    Updated API processing
+
+    Version 1.3
     QGIS 4 compatibility
 
     Version 1.2

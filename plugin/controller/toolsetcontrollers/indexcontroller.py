@@ -176,6 +176,7 @@ class IndexController(ToolsController):
         self._tools.reset()
         if layer and layer.isValid():
             src = layer.selectedFeatureIds()
+            src = list(sorted(src))
             if len(src) > 1:
                 self._layerID = layer.id()
                 self._layerItems = src
@@ -281,6 +282,7 @@ class IndexController(ToolsController):
 
 
     def parseSelectedFeatures(self):
+        ids = self._layer.selectedFeatureIds()
         if self._indexItems.parseItems(ids):
             # ids included new items, adjust indextools accordingly
             maxIndex = len(self._indexItems)-1

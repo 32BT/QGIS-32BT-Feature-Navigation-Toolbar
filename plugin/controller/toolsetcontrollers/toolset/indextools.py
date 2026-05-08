@@ -176,11 +176,16 @@ class IndexTools(ToolSet):
                 return True
         return False
 
+    def minIndex(self):
+        return self._minIndex
 
     def setMinIndex(self, index):
         if self._minIndex != index:
             self._minIndex = index
             self.updateActions()
+
+    def maxIndex(self):
+        return self._maxIndex
 
     def setMaxIndex(self, index):
         if self._maxIndex != index:
